@@ -19,7 +19,7 @@ setwd("/Users/andreeamurariu/Documents/3383 Project/")
 getwd() 
 ```
 
-****Need to check if should be using raw or normalized counts from: https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE91061 
+** Using series matrix file **
 
 ```{r}
 
@@ -36,7 +36,7 @@ conditions[grep("_On",d)] <- "On"
 
 
 ```{r}
-#COUNT MATRIX PREPROCESSING - to be edited
+#COUNT MATRIX PREPROCESSING 
 conds <- factor(conditions)
 y <- DGEList(counts=readCount, group=conds) 
 
@@ -45,41 +45,12 @@ y <- y[keep,,keep.lib.sizes=FALSE]
 
 design <- model.matrix(~conds)
 fit <- glmQLFit(y, design)
-qlf <- glmQLFit(fit, coef=2)
+qlf <- glmQLFit(fit, coef=2) # returns error message because outputs negative values, which should not be possible in reality (ie. gene expression levels should not be negative values)
 
 count_norm=cpm(y) 
 count_norm<-as.data.frame(count_norm) 
-
 ```
-
-```{r}
-#Run Wilcoxon rank-sum test for each gene - to be edited
-
-pvalues <- sapply(1:nrow(count_norm),function(i){
-     data<-cbind.data.frame(gene=as.numeric(t(count_norm[i,])),conditions)
-     p=wilcox.test(gene~conditions, data)$p.value
-     return(p)
-   })
-fdr=p.adjust(pvalues,method = "fdr")
-```
-
-```{r}
-#Calculate the fold-changes for each gene - to be edited
-
-conditionsLevel<-levels(conditions) 
-dataCon1 = count_norm[,c(which(conditions==conditionsLevel[1]))]
-dataCon2 = count_norm[,c(which(conditions==conditionsLevel[2]))]
-foldChanges=log2(rowMeans(dataCon2/rowMeans(dataCon1)))
-```
-
-```{r}
-#Output results based on FDR threshold - to be edited
-
-outRst<-data.frame(log2foldChange=foldChanges,pValues=pvalues,FDR=fdr)
-rownames(outRst)=rownames(count_norm)
-fdrThres=0.05
-write.table(outRst[outRst$FDR<fdrThres,], file="examples.WilcoxonTest.rst.tsv",sep="\t", quote=F,row.names = T,col.names = T)
-```
+#edgeR will have to be omitted from the rest of the tests
 
 2. Using DESeq2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
 
