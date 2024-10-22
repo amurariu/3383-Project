@@ -1,0 +1,93 @@
+---
+title: "edgeR and DESeq2 Immunotherapy Dataset"
+author: "Andreea Murariu"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+#Installation of Packages edgeR, DESeq2, and ALDEx2
+library(edgeR,quietly=T) 
+library(DESeq2,quietly=T)
+library(ALDEx2,quietly=T)
+```
+
+1. Using edgeR to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
+```{r}
+#Setting the Working Directory
+setwd("/Users/andreeamurariu/Documents/3383 Project/")
+getwd() 
+```
+
+****Need to check if should be using raw or normalized counts from: https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSE91061 
+
+```{r}
+
+readCount<-read.table(file="GSE91061_raw_counts_GRCh38.p13_NCBI.tsv", header = T, skip=35, sep='\t', row.names = 1)
+#pull out just the accessino numbers and patient identifiers and put them in another file
+d <- read.table(file="metadata.txt", header=F, row.names=1, sep='\t')
+```
+
+```{r}
+conditions <- rep("Pre", 109)
+grep("_On",d)
+conditions[grep("_On",d)] <- "On"
+```
+
+
+```{r}
+#COUNT MATRIX PREPROCESSING - to be edited
+conds <- factor(conditions)
+y <- DGEList(counts=readCount, group=conds) 
+
+keep<-filterByExpr(y) 
+y <- y[keep,,keep.lib.sizes=FALSE] 
+
+design <- model.matrix(~conds)
+fit <- glmQLFit(y, design)
+qlf <- glmQLFit(fit, coef=2)
+
+count_norm=cpm(y) 
+count_norm<-as.data.frame(count_norm) 
+
+```
+
+```{r}
+#Run Wilcoxon rank-sum test for each gene - to be edited
+
+pvalues <- sapply(1:nrow(count_norm),function(i){
+     data<-cbind.data.frame(gene=as.numeric(t(count_norm[i,])),conditions)
+     p=wilcox.test(gene~conditions, data)$p.value
+     return(p)
+   })
+fdr=p.adjust(pvalues,method = "fdr")
+```
+
+```{r}
+#Calculate the fold-changes for each gene - to be edited
+
+conditionsLevel<-levels(conditions) 
+dataCon1 = count_norm[,c(which(conditions==conditionsLevel[1]))]
+dataCon2 = count_norm[,c(which(conditions==conditionsLevel[2]))]
+foldChanges=log2(rowMeans(dataCon2/rowMeans(dataCon1)))
+```
+
+```{r}
+#Output results based on FDR threshold - to be edited
+
+outRst<-data.frame(log2foldChange=foldChanges,pValues=pvalues,FDR=fdr)
+rownames(outRst)=rownames(count_norm)
+fdrThres=0.05
+write.table(outRst[outRst$FDR<fdrThres,], file="examples.WilcoxonTest.rst.tsv",sep="\t", quote=F,row.names = T,col.names = T)
+```
+
+2. Using DESeq2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
+
+
+
+3. Using ALDEx2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
+ALDEx2 t-test and Wilcoxon rank-sum test
+```{r}
+aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
+
+```
