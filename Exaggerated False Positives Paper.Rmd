@@ -1,0 +1,56 @@
+---
+title: "Exaggerated False Positives Paper"
+author: "Andreea Murariu"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+Using dataset and code from "Exaggerated false positives by popular differential expression methods when analyzing human population samples." 
+
+```{r}
+#Load required R Packages
+library(edgeR,quietly=T) #loaded edgeR into R
+```
+
+Read Count matrix file: each row is a gene, each column is a sample
+Conditions labels file: one row with condition labels corresponding to each sample in the read count matrix file
+
+```{r}
+setwd("/Users/andreeamurariu/Documents/3383 Project/")
+getwd() #setting working directory to be able to access the files
+```
+
+
+```{r}
+readCount<-read.table(file="examples.countMatrix.tsv", header = T, row.names = 1, stringsAsFactors = F,check.names = F)
+
+#read.table function works to read a file in table format, and also creates a data frame from it, with cases corresponding to lines and variables to fields
+
+#header = T and row.names is used only if there is a header and the 1st row has 1 less field than the number of columns (basically makes the first row a header?)
+
+#stringAsFactors - indicates if data should be treated as variables or strings(characters?)
+
+#check.names - differing # of columns and rows?
+
+#Check what logical means?
+
+conditions<-read.table(file="examples.conditions.tsv", header=F)
+conditions<-factor(t(conditions))
+
+```
+
+```{r}
+#COUNT MATRIX PREPROCESSING USING EDGER
+
+y <- DGEList(counts=readCount, group=conditions) 
+
+#removes rows consistently have 0 or very low counts
+keep<-filterByExpr(y)
+y <- y[keep,keep.lib.sizes=FALSE]
+
+#Perform TMM normalization and transfer to counts per million (CPM)
+y<-calcNormFactors(y,method="TMM")
+count_norm=cpm(y)
+count_norm<-as.data.frame(count_norm)
+
+```
