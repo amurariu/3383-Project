@@ -24,16 +24,16 @@ getwd()
 ** Using series matrix file **
 
 ```{r}
-
 readCount<-read.table(file="data/GSE91061_raw_counts_GRCh38.p13_NCBI.tsv", header = T, skip=35, sep='\t', row.names = 1)
 #pull out just the accessino numbers and patient identifiers and put them in another file
-d <- read.table(file="metadata.txt", header=F, row.names=1, sep='\t')
+d <- read.table(file="data/metadata.txt", header=F, row.names=1, sep='\t')
 ```
 
 ```{r}
 conditions <- rep("Pre", 109)
 grep("_On",d)
-conditions[grep("_On",d)] <- "On"
+# troubleshooting check
+#conditions[grep("_On",d)] <- "On"
 ```
 
 
@@ -42,15 +42,16 @@ conditions[grep("_On",d)] <- "On"
 conds <- factor(conditions)
 y <- DGEList(counts=readCount, group=conds) 
 
+# use edgeR filtering for rows as SOP
 keep<-filterByExpr(y) 
-y <- y[keep,,keep.lib.sizes=FALSE] 
-
-design <- model.matrix(~conds)
-fit <- glmQLFit(y, design)
-qlf <- glmQLFit(fit, coef=2) # returns error message because outputs negative values, which should not be possible in reality (ie. gene expression levels should not be negative values)
-
-count_norm=cpm(y) 
-count_norm<-as.data.frame(count_norm) 
+# y <- y[keep,,keep.lib.sizes=FALSE] 
+# 
+# design <- model.matrix(~conds)
+# fit <- glmQLFit(y, design)
+# qlf <- glmQLFit(fit, coef=2) # returns error message because outputs negative values, which should not be possible in reality (ie. gene expression levels should not be negative values)
+# 
+# count_norm=cpm(y) 
+# count_norm<-as.data.frame(count_norm) 
 ```
 #edgeR will have to be omitted from the rest of the tests
 
@@ -61,6 +62,8 @@ count_norm<-as.data.frame(count_norm)
 3. Using ALDEx2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
 ALDEx2 t-test and Wilcoxon rank-sum test
 ```{r}
+#use edgeR filtering to keep rows for analysis
+read.keep <- readCount[keep,]
 aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
 
 ```
