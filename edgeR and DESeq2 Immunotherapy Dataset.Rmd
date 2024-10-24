@@ -15,7 +15,9 @@ library(ALDEx2,quietly=T)
 1. Using edgeR to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
 ```{r}
 #Setting the Working Directory
-setwd("/Users/andreeamurariu/Documents/3383 Project/")
+#andreea setting
+## gg may comment this out 
+setwd("/Users/andreeamurariu/Documents/github/3383 Project/")
 getwd() 
 ```
 
@@ -23,7 +25,7 @@ getwd()
 
 ```{r}
 
-readCount<-read.table(file="GSE91061_raw_counts_GRCh38.p13_NCBI.tsv", header = T, skip=35, sep='\t', row.names = 1)
+readCount<-read.table(file="data/GSE91061_raw_counts_GRCh38.p13_NCBI.tsv", header = T, skip=35, sep='\t', row.names = 1)
 #pull out just the accessino numbers and patient identifiers and put them in another file
 d <- read.table(file="metadata.txt", header=F, row.names=1, sep='\t')
 ```
