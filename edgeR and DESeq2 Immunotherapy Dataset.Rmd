@@ -63,10 +63,15 @@ keep<-filterByExpr(y)
 ALDEx2 t-test and Wilcoxon rank-sum test
 ```{r}
 #use edgeR filtering to keep rows for analysis
-read.keep <- readCount[keep,]
-aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
-aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
-save(aldex.out, file="output/aldex.out.Rda")
-save(aldex.0.5, file="output/aldex.0.5.Rda")
-
+#read.keep <- readCount[keep,]
+#aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
+#aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
+#save(aldex.out, file="output/aldex.out.Rda")
+#save(aldex.0.5, file="output/aldex.0.5.Rda")
+#these have already been run + data is saved
+load(file="output/aldex.out.Rda")
+load(file="output/aldex.0.5.Rda")
+pdf("no-gamma.pdf", height=5, width=5)
+aldex.plot(aldex.out)
+dev.off()
 ```
