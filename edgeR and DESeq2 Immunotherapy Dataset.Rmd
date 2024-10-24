@@ -73,5 +73,6 @@ load(file="output/aldex.out.Rda")
 load(file="output/aldex.0.5.Rda")
 pdf("no-gamma.pdf", height=5, width=5)
 aldex.plot(aldex.out)
-dev.off()
+pdf("gamma0.5.pdf", height=5, width=5)
+aldex.plot(aldex.0.5)
 ```
