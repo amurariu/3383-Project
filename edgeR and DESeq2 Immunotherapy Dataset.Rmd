@@ -17,7 +17,7 @@ library(ALDEx2,quietly=T)
 #Setting the Working Directory
 #andreea setting
 ## gg may comment this out 
-setwd("/Users/andreeamurariu/Documents/github/3383 Project/")
+setwd("/Users/andreeamurariu/Documents/github/3383-Project/")
 getwd() 
 ```
 
@@ -57,6 +57,56 @@ keep<-filterByExpr(y)
 
 2. Using DESeq2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
 
+```{r}
+read.keep <- readCount[keep,]
+conds <- factor(conditions)
+trueDE <-Reduce(intersect,read.keep)
+
+#LOOK OVER CODE FROM HERE ONWARDS
+
+#DESeq(DESeqDataSet(), test=c(LRT),fit=parametric) 
+#results line
+
+
+if(norm =="permprenorm"){
+  # Permutation under H0
+  trueDE_samplehalf <- sample(trueDE, length(trueDE)/2)
+  readCount[!(rownames(readCount) %in% trueDE_samplehalf), ] <-
+    t(apply(readCount[!(rownames(readCount) %in% trueDE_samplehalf), ], 1, sample))
+}
+
+if(norm !="nonorm"){
+  # Normalization
+  y <- DGEList(counts=readCount, group=condition)
+  keep <- filterByExpr(y)
+  y <- y[keep, keep.lib.sizes=FALSE]
+  y <- calcNormFactors(y,method="TMM")
+  count_norm <- cpm(y, log=TRUE)
+}else{
+  count_norm <- as.matrix(readCount)
+}
+
+if(norm == "permpostnorm" | norm == "nonorm"){
+  # Permutation under H0
+  trueDE_samplehalf <- sample(trueDE, length(trueDE)/2)
+  count_norm[!(rownames(count_norm) %in% trueDE_samplehalf), ] <-
+    t(apply(count_norm[!(rownames(count_norm) %in% trueDE_samplehalf), ], 1, sample))
+}
+
+# Remove zero variance genes
+count_norm <- count_norm[matrixStats::rowVars(count_norm)>0, ]
+
+
+results(count_norm)
+# Estimation
+#conditions_mat <- model.matrix(~ 1 + conds)[, 2, drop=FALSE] #line error
+
+```
+
+
+```{r}
+DESeq2::plotMA(count_norm,alpha=0.01)
+```
 
 
 3. Using ALDEx2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
@@ -73,6 +123,6 @@ load(file="output/aldex.out.Rda")
 load(file="output/aldex.0.5.Rda")
 pdf("no-gamma.pdf", height=5, width=5)
 aldex.plot(aldex.out)
-pdf("gamma0.5.pdf", height=5, width=5)
+pdf("gamma0.5.pdf", height=5, width=7)
 aldex.plot(aldex.0.5)
 ```
