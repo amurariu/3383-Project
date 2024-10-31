@@ -56,17 +56,15 @@ keep<-filterByExpr(y)
 #edgeR will have to be omitted from the rest of the tests
 
 2. Using DESeq2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
-
+hea
 ```{r}
 read.keep <- readCount[keep,]
 conds <- factor(conditions)
 trueDE <-Reduce(intersect,read.keep)
 
-#LOOK OVER CODE FROM HERE ONWARDS
-
-#DESeq(DESeqDataSet(), test=c(LRT),fit=parametric) 
-#results line
-
+SE1<-SummarizedExperiment(assays=read.keep,metadata=d)
+DESeqDataSet(SE1)
+DESeq(DESeqDataSet(), test=c(LRT),fit=parametric) 
 
 if(norm =="permprenorm"){
   # Permutation under H0
@@ -79,7 +77,7 @@ if(norm !="nonorm"){
   # Normalization
   y <- DGEList(counts=readCount, group=condition)
   keep <- filterByExpr(y)
-  y <- y[keep, keep.lib.sizes=FALSE]
+  y <- y[keep, keep.lib.sizes=TRUE]
   y <- calcNormFactors(y,method="TMM")
   count_norm <- cpm(y, log=TRUE)
 }else{
@@ -94,8 +92,6 @@ if(norm == "permpostnorm" | norm == "nonorm"){
 }
 
 # Remove zero variance genes
-count_norm <- count_norm[matrixStats::rowVars(count_norm)>0, ]
-
 
 results(count_norm)
 # Estimation
