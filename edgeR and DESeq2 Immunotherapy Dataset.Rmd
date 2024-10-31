@@ -62,10 +62,12 @@ read.keep <- readCount[keep,]
 conds <- factor(conditions)
 trueDE <-Reduce(intersect,read.keep)
 
-SE1<-SummarizedExperiment(assays=read.keep,metadata=d)
+SE1<-SummarizedExperiment(assays=read.keep,metadata=d,rowRanges=(2,17237)) # running into issue here, says count matrix should be numberic and that it currently has mode: list
 DESeqDataSet(SE1)
 DESeq(DESeqDataSet(), test=c(LRT),fit=parametric) 
 
+
+##is normalization here necessary for our purposes?
 if(norm =="permprenorm"){
   # Permutation under H0
   trueDE_samplehalf <- sample(trueDE, length(trueDE)/2)
@@ -91,17 +93,12 @@ if(norm == "permpostnorm" | norm == "nonorm"){
     t(apply(count_norm[!(rownames(count_norm) %in% trueDE_samplehalf), ], 1, sample))
 }
 
-# Remove zero variance genes
-
-results(count_norm)
-# Estimation
-#conditions_mat <- model.matrix(~ 1 + conds)[, 2, drop=FALSE] #line error
 
 ```
 
 
 ```{r}
-DESeq2::plotMA(count_norm,alpha=0.01)
+DESeq2::plotMA(count_norm,alpha=0.01) #is there another type of plot I should be using instead for DESeq2?
 ```
 
 
