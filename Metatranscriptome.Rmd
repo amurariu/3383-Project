@@ -1,0 +1,17 @@
+---
+title: "Metatranscriptome"
+author: "Andreea Murariu"
+date: "`r Sys.Date()`"
+output: html_document
+---
+```{r}
+#Installation of Packages edgeR, DESeq2, and ALDEx2
+library(DESeq2,quietly=T)
+library(ALDEx2,quietly=T)
+
+#
+readCount<-read.table(file="[insertfilehere]", header = T, skip=35, sep='\t', row.names = 1)
+#metadata with patient identifiers
+d <- read.table(file="[inserthere]", header=F, row.names=1, sep='\t')
+```
+
