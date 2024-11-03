@@ -56,7 +56,28 @@ keep<-filterByExpr(y)
 #edgeR will have to be omitted from the rest of the tests
 
 2. Using DESeq2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
-hea
+
+```{r}
+#new trial of DESeq2 code
+
+# upload dataset
+readCount<-read.table(file="data/GSE91061_raw_counts_GRCh38.p13_NCBI.tsv", header = T, skip=35, sep='\t', row.names = 1)
+d <- read.table(file="data/metadata.txt", header=F, row.names=1, sep='\t')
+read.keep <- readCount[keep,]
+
+#Creating a DESeqDataSet
+
+dds <- DESeqDataSet(countData = read.keep,colData = d) #error message with saying unused arguments
+
+#DESeq2 analysis
+
+deseq2out <- DESeq (dds, test=c("LRT"))
+res <- results(deseq2out)
+res
+```
+```
+
+
 ```{r}
 read.keep <- readCount[keep,]
 conds <- factor(conditions)
