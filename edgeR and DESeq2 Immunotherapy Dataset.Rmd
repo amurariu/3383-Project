@@ -33,14 +33,22 @@ d <- read.table(file="data/metadata.txt", header=F, row.names=1, sep='\t')
 conditions <- rep("Pre", 109)
 grep("_On",d)
 # troubleshooting check
-#conditions[grep("_On",d)] <- "On"
+#### GG
+# This needed to be uncommented
+###
+conditions[grep("_On",d)] <- "On"
+conds <- data.frame(conditions)
+conds$condition <- factor(conds$condition)
+
 ```
 
 
 ```{r}
+### I commented all this out as irrelevant except line 53
+### still need the edgeR package
 #COUNT MATRIX PREPROCESSING 
-conds <- factor(conditions)
-y <- DGEList(counts=readCount, group=conds) 
+conds.edge <- factor(conditions)
+y <- DGEList(counts=readCount, group=conds.edge) 
 
 # use edgeR filtering for rows as SOP
 keep<-filterByExpr(y) 
@@ -60,19 +68,18 @@ keep<-filterByExpr(y)
 ```{r}
 #new trial of DESeq2 code
 
-# upload dataset
-readCount<-read.table(file="data/GSE91061_raw_counts_GRCh38.p13_NCBI.tsv", header = T, skip=35, sep='\t', row.names = 1)
-d <- read.table(file="data/metadata.txt", header=F, row.names=1, sep='\t')
 read.keep <- readCount[keep,]
 
 #Creating a DESeqDataSet
 
-dds <- DESeqDataSet(countData = read.keep,colData = d) #error message with saying unused arguments
+dds <- DESeqDataSetFromMatrix(countData = read.keep,colData = conds, design= ~condition) #error message with saying unused arguments
 
 #DESeq2 analysis
-
-deseq2out <- DESeq (dds, test=c("LRT"))
+### GG comment this out
+# deseq2out <- DESeq (dds, test=c("LRT"))
+deseq2out <- DESeq (dds) # use the default test
 res <- results(deseq2out)
+plotMA(res) # show the MA plot
 res
 ```
 ```
