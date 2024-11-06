@@ -88,13 +88,13 @@ eread.keepx=matrix(nrow=1000,ncol=109)
 	set.seed(100)
 	index=1
 	for(i in 1:1000){
-		x=rep(NA,109)
-		x[sample(1:109,58)]="On"
-		x[is.na(x)]="Pre"
+		#x=rep(NA,109)
+		#x[sample(1:109,58)]="On"
+		#x[is.na(x)]="Pre"
 		read.keep[index,]=x
 		index=index+1
 	}
-	write.table(read.keep,file="permuted.csv",sep="\t", quote=F,row.names = F,col.names = F) 
+	write.table(read.keep,file="permuted1.csv",sep="\t", quote=F,row.names = F,col.names = F) 
 
 ```
 
