@@ -25,7 +25,7 @@ getwd()
 
 ```{r}
 readCount<-read.table(file="data/GSE91061_raw_counts_GRCh38.p13_NCBI.tsv", header = T, skip=35, sep='\t', row.names = 1)
-#pull out just the accessino numbers and patient identifiers and put them in another file
+#pull out just the accession numbers and patient identifiers and put them in another file
 d <- read.table(file="data/metadata.txt", header=F, row.names=1, sep='\t')
 ```
 
@@ -82,6 +82,20 @@ res <- results(deseq2out)
 plotMA(res) # show the MA plot
 res
 ```
+```{r}
+#permute the immunotherapy dataset
+eread.keepx=matrix(nrow=1000,ncol=109)
+	set.seed(100)
+	index=1
+	for(i in 1:1000){
+		x=rep(NA,109)
+		x[sample(1:109,58)]="On"
+		x[is.na(x)]="Pre"
+		read.keep[index,]=x
+		index=index+1
+	}
+	write.table(read.keep,file="permuted.csv",sep="\t", quote=F,row.names = F,col.names = F) 
+
 ```
 
 
