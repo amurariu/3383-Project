@@ -15,3 +15,23 @@ readCount<-read.table(file="[insertfilehere]", header = T, skip=35, sep='\t', ro
 d <- read.table(file="[inserthere]", header=F, row.names=1, sep='\t')
 ```
 
+1. ALDEx2 - t-test and Wilcoxon rank-sum test
+```{r}
+read.keep <- readCount[keep,]
+aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
+aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
+
+
+```
+
+
+2. DESeq2 Analysis
+```{r}
+read.keep <- readCount[keep,]
+dds <- DESeqDataSetFromMatrix(countData = read.keep,colData = conds, design= ~condition) 
+deseq2out <- DESeq (dds)
+res <- results(deseq2out)
+plotMA(res)
+res
+```
+

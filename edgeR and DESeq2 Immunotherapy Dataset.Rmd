@@ -148,9 +148,11 @@ DESeq2::plotMA(count_norm,alpha=0.01) #is there another type of plot I should be
 ALDEx2 t-test and Wilcoxon rank-sum test
 ```{r}
 #use edgeR filtering to keep rows for analysis
-#read.keep <- readCount[keep,]
+read.keep <- readCount[keep,]
 #aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
 #aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
+aldex.1 <- (read.keep , conditions, gamma=0.75) #unexpected ','?
+aldex.5 <- (read.keep, conditions, gamma=5) #unexpected ','?
 #save(aldex.out, file="output/aldex.out.Rda")
 #save(aldex.0.5, file="output/aldex.0.5.Rda")
 #these have already been run + data is saved
