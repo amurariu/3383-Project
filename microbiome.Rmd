@@ -1,5 +1,5 @@
 ---
-title: "Metatranscriptome"
+title: "Microbiome"
 author: "Andreea Murariu"
 date: "`r Sys.Date()`"
 output: html_document
@@ -10,17 +10,16 @@ library(DESeq2,quietly=T)
 library(ALDEx2,quietly=T)
 
 #
-readCount<-read.table(file="[insertfilehere]", header = T, skip=35, sep='\t', row.names = 1)
+readCount<-read.table(file="microbiomedata.tsv", header = T, sep='\t', row.names = 1)
 #metadata with patient identifiers
-d <- read.table(file="[inserthere]", header=F, row.names=1, sep='\t')
+meta <- read.table(file="microbiomemetadata.tsv", header=F, row.names=1, sep='\t')
 ```
 
 1. ALDEx2 - t-test and Wilcoxon rank-sum test
 ```{r}
 read.keep <- readCount[keep,]
-aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
+aldex.out <- aldex(readCount, meta, gamma=1e-3)
 aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
-
 
 ```
 
