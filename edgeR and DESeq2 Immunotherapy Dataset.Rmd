@@ -171,9 +171,9 @@ save(aldex.1, file="output/aldex.1.Rda")
 save(aldex.5, file="output/aldex.5.Rda")
 load(file="output/aldex.1.Rda")
 load(file="output/aldex.5.Rda")
-pdf("gamma0.5.pdf", height=5, width=7)
+pdf("gamma.1.pdf", height=5, width=7)
 aldex.plot(aldex.1)
-pdf("gamma0.5.pdf", height=5, width=7)
+pdf("gamma.5.pdf", height=5, width=7)
 aldex.plot(aldex.5)
 
 #5,10, 20 in each group
