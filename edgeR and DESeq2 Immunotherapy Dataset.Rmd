@@ -81,6 +81,8 @@ deseq2out <- DESeq (dds) # use the default test
 res <- results(deseq2out)
 plotMA(res) # show the MA plot
 res
+
+
 ```
 ```{r}
 #permute the immunotherapy dataset
@@ -95,6 +97,10 @@ eread.keepx=matrix(nrow=1000,ncol=109)
 		index=index+1
 	}
 	write.table(read.keep,file="permuted1.csv",sep="\t", quote=F,row.names = F,col.names = F) 
+	
+	
+	
+	sample(colnames(read.keep))
 
 ```
 
@@ -151,15 +157,36 @@ ALDEx2 t-test and Wilcoxon rank-sum test
 read.keep <- readCount[keep,]
 #aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
 #aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
-aldex.1 <- (read.keep , conditions, gamma=0.75) #unexpected ','?
-aldex.5 <- (read.keep, conditions, gamma=5) #unexpected ','?
+aldex.1 <- aldex(read.keep, conditions, gamma=1) 
+aldex.5 <- aldex(read.keep, conditions, gamma=5) 
 #save(aldex.out, file="output/aldex.out.Rda")
 #save(aldex.0.5, file="output/aldex.0.5.Rda")
 #these have already been run + data is saved
-load(file="output/aldex.out.Rda")
-load(file="output/aldex.0.5.Rda")
-pdf("no-gamma.pdf", height=5, width=5)
-aldex.plot(aldex.out)
+#load(file="output/aldex.out.Rda")
+#load(file="output/aldex.0.5.Rda")
+#pdf("no-gamma.pdf", height=5, width=5)
+#aldex.plot(aldex.out)
+
+save(aldex.1, file="output/aldex.1.Rda")
+save(aldex.5, file="output/aldex.5.Rda")
+load(file="output/aldex.1.Rda")
+load(file="output/aldex.5.Rda")
 pdf("gamma0.5.pdf", height=5, width=7)
-aldex.plot(aldex.0.5)
+aldex.plot(aldex.1)
+pdf("gamma0.5.pdf", height=5, width=7)
+aldex.plot(aldex.5)
+
+#5,10, 20 in each group
+#do tests w 2 p values and effect-size cutoff of 1
+
+
+#how to deal with ones significant w p values and not effect
+#what is the proportion of the ones sig w p / effect
+
+#for positive control, when subset, are the scale parameters consistent across diff subsets - should be
+
+# condition vector and randomize it
+
+conds <- c(rep("H",5),rep("B",5))
+r.conds <-sample(conds)
 ```
