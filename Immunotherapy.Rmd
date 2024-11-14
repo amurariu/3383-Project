@@ -1,0 +1,101 @@
+---
+title: "Immunotherapy"
+author: "Andreea Murariu"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r}
+#Installation of Packages edgeR, DESeq2, and ALDEx2
+library(edgeR,quietly=T) 
+library(DESeq2,quietly=T)
+library(ALDEx2,quietly=T)
+```
+
+```{r}
+#Setting the Working Directory
+#andreea setting
+## gg may comment this out 
+setwd("/Users/andreeamurariu/Documents/github/3383-Project/")
+getwd() 
+```
+
+```{r}
+readCount<-read.table(file="data/GSE91061_raw_counts_GRCh38.p13_NCBI.tsv", header = T, skip=35, sep='\t', row.names = 1)
+#pull out just the accession numbers and patient identifiers and put them in another file
+d <- read.table(file="data/metadata.txt", header=F, row.names=1, sep='\t')
+```
+
+```{r}
+#setting conditions for the dataset
+conditions <- rep("Pre", 109)
+grep("_On",d)
+conditions[grep("_On",d)] <- "On"
+conds <- data.frame(conditions)
+conds$condition <- factor(conds$condition)
+```
+
+
+1) Using DESeq2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
+
+```{r}
+# use edgeR filtering for rows as SOP
+keep<-filterByExpr(y) 
+read.keep <- readCount[keep,]
+
+#Creating a DESeqDataSet
+dds <- DESeqDataSetFromMatrix(countData = read.keep,colData = conds, design= ~condition) 
+
+#DESeq2 analysis
+deseq2out <- DESeq (dds) # use the default test
+res <- results(deseq2out)
+plotMA(res) # show the MA plot
+res
+```
+
+```{r}
+#permute the immunotherapy dataset
+conds2 <- c(rep("H",5),rep("B",5)) #need to edit for immunotherapy dataset
+r.conds <-sample(conds)
+
+#rerun DESeq2 with permuted data set
+dds <- DESeqDataSetFromMatrix(countData = read.keep,colData = conds2, design= ~condition) 
+deseq2outperm <- DESeq (dds) # use the default test
+resperm <- results(deseq2outperm)
+plotMA(resperm) # show the MA plot
+resperm
+```
+
+2) Using ALDEx2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
+ALDEx2 t-test and Wilcoxon rank-sum test
+```{r}
+#ALDEx2 code for differing gamma values (1e-3, 0.5, 1, 5)
+read.keep <- readCount[keep,]
+#aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
+#aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
+#aldex.1 <- aldex(read.keep, conditions, gamma=1) 
+#aldex.5 <- aldex(read.keep, conditions, gamma=5) 
+
+save(aldex.out, file="output/aldex.out.imm.Rda")
+save(aldex.0.5, file="output/aldex.0.5.imm.Rda")
+save(aldex.1, file="output/aldex.1.imm.Rda")
+save(aldex.5, file="output/aldex.5.imm.Rda")
+
+load(file="output/aldex.out.imm.Rda")
+load(file="output/aldex.0.5.imm.Rda")
+load(file="output/aldex.1.imm.Rda")
+load(file="output/aldex.5.imm.Rda")
+
+pdf("no-gamma.imm.pdf", height=5, width=7)
+aldex.plot(aldex.out)
+
+pdf("gamma0.5.imm.pdf", height=5, width=7)
+aldex.plot(aldex.0.5)
+
+pdf("gamma.1.imm.pdf", height=5, width=7)
+aldex.plot(aldex.1)
+
+pdf("gamma.5.imm.pdf", height=5, width=7)
+aldex.plot(aldex.5)
+
+```

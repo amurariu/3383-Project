@@ -1,0 +1,36 @@
+---
+title: "MOMS-PI"
+author: "Andreea Murariu"
+date: "`r Sys.Date()`"
+output: html_document
+---
+```{r}
+#Installation of Packages edgeR, DESeq2, and ALDEx2
+library(DESeq2,quietly=T)
+library(ALDEx2,quietly=T)
+
+#
+readCount<-read.table(file="", header = T, sep='\t', row.names = 1)
+#metadata with patient identifiers
+meta <- read.table(file="", header=F, row.names=1, sep='\t')
+```
+
+1. ALDEx2 - t-test and Wilcoxon rank-sum test
+```{r}
+read.keep <- readCount[keep,]
+aldex.out <- aldex(readCount, meta, gamma=1e-3)
+aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
+
+```
+
+
+2. DESeq2 Analysis
+```{r}
+read.keep <- readCount[keep,]
+dds <- DESeqDataSetFromMatrix(countData = read.keep,colData = conds, design= ~condition) 
+deseq2out <- DESeq (dds)
+res <- results(deseq2out)
+plotMA(res)
+res
+```
+
