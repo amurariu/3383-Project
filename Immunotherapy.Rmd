@@ -99,3 +99,17 @@ pdf("gamma.5.imm.pdf", height=5, width=7)
 aldex.plot(aldex.5)
 
 ```
+
+
+```{r}
+#permute the immunotherapy dataset
+conds2 <- c(rep("H",5),rep("B",5)) #need to edit for immunotherapy dataset
+r.conds <-sample(conds)
+
+#rerun ALDEx2 with permuted data set
+aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
+aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
+aldex.1 <- aldex(read.keep, conditions, gamma=1) 
+aldex.5 <- aldex(read.keep, conditions, gamma=5) 
+```
+
