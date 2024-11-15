@@ -51,12 +51,16 @@ deseq2out <- DESeq (dds) # use the default test
 res <- results(deseq2out)
 plotMA(res) # show the MA plot
 res
+
+#generating effect-size plots in DESeq2
+lfcShrink(res)
+plotDispEsts(dds)
 ```
 
 ```{r}
 #permute the immunotherapy dataset
-conds2 <- c(rep("H",5),rep("B",5)) #need to edit for immunotherapy dataset
-r.conds <-sample(conds)
+conds2 <- c(rep("Pre",5),rep("_On",5)) #need to edit for immunotherapy dataset
+r.conds <-sample(conds2)
 
 #rerun DESeq2 with permuted data set
 dds <- DESeqDataSetFromMatrix(countData = read.keep,colData = conds2, design= ~condition) 
@@ -64,6 +68,10 @@ deseq2outperm <- DESeq (dds) # use the default test
 resperm <- results(deseq2outperm)
 plotMA(resperm) # show the MA plot
 resperm
+
+#generating effect-size plots in DESeq2
+lfcShrink(dds)
+
 ```
 
 2) Using ALDEx2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
@@ -71,31 +79,31 @@ ALDEx2 t-test and Wilcoxon rank-sum test
 ```{r}
 #ALDEx2 code for differing gamma values (1e-3, 0.5, 1, 5)
 read.keep <- readCount[keep,]
-#aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
-#aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
-#aldex.1 <- aldex(read.keep, conditions, gamma=1) 
-#aldex.5 <- aldex(read.keep, conditions, gamma=5) 
+aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
+aldex.0.2 <- aldex(read.keep, conditions, gamma=0.2)
+aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5) 
+aldex.1 <- aldex(read.keep, conditions, gamma=1) 
 
 save(aldex.out, file="output/aldex.out.imm.Rda")
+save(aldex.0.2, file="output/aldex.0.2.imm.Rda")
 save(aldex.0.5, file="output/aldex.0.5.imm.Rda")
 save(aldex.1, file="output/aldex.1.imm.Rda")
-save(aldex.5, file="output/aldex.5.imm.Rda")
 
 load(file="output/aldex.out.imm.Rda")
+load(file="output/aldex.0.2.imm.Rda")
 load(file="output/aldex.0.5.imm.Rda")
 load(file="output/aldex.1.imm.Rda")
-load(file="output/aldex.5.imm.Rda")
 
 pdf("no-gamma.imm.pdf", height=5, width=7)
 aldex.plot(aldex.out)
 
-pdf("gamma0.5.imm.pdf", height=5, width=7)
+pdf("gamma0.2.imm.pdf", height=5, width=7)
 aldex.plot(aldex.0.5)
 
-pdf("gamma.1.imm.pdf", height=5, width=7)
+pdf("gamma.0.5.imm.pdf", height=5, width=7)
 aldex.plot(aldex.1)
 
-pdf("gamma.5.imm.pdf", height=5, width=7)
+pdf("gamma.1.imm.pdf", height=5, width=7)
 aldex.plot(aldex.5)
 
 ```
@@ -103,13 +111,16 @@ aldex.plot(aldex.5)
 
 ```{r}
 #permute the immunotherapy dataset
-conds2 <- c(rep("H",5),rep("B",5)) #need to edit for immunotherapy dataset
-r.conds <-sample(conds)
+#conds <- c(rep("_Pre",5),rep("On",5))
+#r.conds <-sample(conds)
+#conditions2 <- c(rep("Pre",5),rep("_On",5)) 
+#sampledconds2 <-sample(size=5,conditions2)
+#conds2 <- data.frame(sampledconds2)
 
 #rerun ALDEx2 with permuted data set
-aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
-aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
-aldex.1 <- aldex(read.keep, conditions, gamma=1) 
-aldex.5 <- aldex(read.keep, conditions, gamma=5) 
+aldex.out <- aldex(r.conds,conds, gamma=1e-3)
+aldex.0.5 <- aldex(read.keep, r.conds, gamma=0.5)
+aldex.1 <- aldex(read.keep, r.conds, gamma=1) 
+aldex.5 <- aldex(read.keep, r.conds, gamma=5) 
 ```
 
