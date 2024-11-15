@@ -58,18 +58,28 @@ plotDispEsts(dds)
 ```
 
 ```{r}
-#permute the immunotherapy dataset
-conds2 <- c(rep("Pre",5),rep("_On",5)) #need to edit for immunotherapy dataset
-r.conds <-sample(conds2)
+#Random Permutation and Sampling
+#1. Setting conditions
+conds2 <- c(rep("Pre",5),rep("_On",5))
+presampl <- which(conds2=="Pre")
+onsampl <- which(conds2=="_On")
 
-#rerun DESeq2 with permuted data set
-dds <- DESeqDataSetFromMatrix(countData = read.keep,colData = conds2, design= ~condition) 
+#Pulling a random sample, assigning it to a seed
+set.seed(125)
+random.pre <- sample(presampl,size = 5)
+random.on <- sample(onsampl,size = 5)
+groups.10 <- conds2[c(random.pre,random.on)]
+df2.10 <- read.keep[,c(random.pre,random.on)]
+groups.10.rand2 <- sample(groups.10)
+
+#rerun DESeq2 with permuted data set - need to edit so that it works with DESeq2
+dds2 <- DESeqDataSetFromMatrix(countData = df2.10,colData = groups.10.rand2, design= ~condition) ##edit this, attempt to set rownames 
 deseq2outperm <- DESeq (dds) # use the default test
 resperm <- results(deseq2outperm)
 plotMA(resperm) # show the MA plot
 resperm
 
-#generating effect-size plots in DESeq2
+#generating effect-size plots in DESeq2 - need to check how to make effect size plots here
 lfcShrink(dds)
 
 ```
@@ -77,7 +87,7 @@ lfcShrink(dds)
 2) Using ALDEx2 to identify differentially expressed genes (DEGs) in the Immunotherapy Dataset 
 ALDEx2 t-test and Wilcoxon rank-sum test
 ```{r}
-#ALDEx2 code for differing gamma values (1e-3, 0.5, 1, 5)
+#ALDEx2 code for differing gamma values (1e-3, 0.2, 0.5, 1)
 read.keep <- readCount[keep,]
 aldex.out <- aldex(read.keep, conditions, gamma=1e-3)
 aldex.0.2 <- aldex(read.keep, conditions, gamma=0.2)
@@ -106,21 +116,49 @@ aldex.plot(aldex.1)
 pdf("gamma.1.imm.pdf", height=5, width=7)
 aldex.plot(aldex.5)
 
+
+#Generating graphs for Wilcoxon and t-tests - need to verify how to get 2 different effect size plots for each
+aldex1e3wilc <- aldex.out <- aldex(read.keep, conditions,test="t",gamma=1e-3)
+aldex.plot(aldex1e3wilc)
+
 ```
 
 
 ```{r}
-#permute the immunotherapy dataset
-#conds <- c(rep("_Pre",5),rep("On",5))
-#r.conds <-sample(conds)
-#conditions2 <- c(rep("Pre",5),rep("_On",5)) 
-#sampledconds2 <-sample(size=5,conditions2)
-#conds2 <- data.frame(sampledconds2)
+#Random Permutation and Sampling
+#1. Setting conditions
+conds2 <- c(rep("Pre",5),rep("_On",5))
+presampl <- which(conds2=="Pre")
+onsampl <- which(conds2=="_On")
 
-#rerun ALDEx2 with permuted data set
-aldex.out <- aldex(r.conds,conds, gamma=1e-3)
-aldex.0.5 <- aldex(read.keep, r.conds, gamma=0.5)
-aldex.1 <- aldex(read.keep, r.conds, gamma=1) 
-aldex.5 <- aldex(read.keep, r.conds, gamma=5) 
+#Pulling a random sample, assigning it to a seed
+set.seed(123)
+random.pre <- sample(presampl,size = 5)
+random.on <- sample(onsampl,size = 5)
+groups.10 <- conds2[c(random.pre,random.on)]
+df.10 <- read.keep[,c(random.pre,random.on)]
+groups.10.rand <- sample(groups.10)
+
+#ALDEX Running of data and effect size plot generation
+aldexp1e-3<-aldex(df.10,groups.10,gamma=1e-3)
+aldex.plot(aldexoutp1e-3)
+aldex.p.0.2 <- aldex(read.keep, r.conds, gamma=0.2)
+aldex.plot(aldex.p.0.2)
+aldex.p.0.5 <- aldex(read.keep, r.conds, gamma=0.5) 
+aldex.plot(aldex.p.0.5)
+aldex.p.1 <- aldex(read.keep, r.conds, gamma=1) 
+aldex.plot(aldex.p.1)
+
+
+#trying to generate a for loop for random permutations
+for (x in 1:100) 
+  {set.seed(x)
+  random.pre <- sample(presampl,size = 5)
+  random.on <- sample(onsampl,size = 5)
+  groups.10 <- conds2[c(random.pre,random.on)]
+  df.10 <- read.keep[,c(random.pre,random.on)]
+  groups.10.rand <- sample(groups.10)
+  loopedaldexperm <- aldex(df.10,groups.10,gamma=0.2)
+  aldex.plot(loopedaldexperm)}
 ```
 
