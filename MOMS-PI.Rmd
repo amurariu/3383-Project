@@ -9,17 +9,16 @@ output: html_document
 library(DESeq2,quietly=T)
 library(ALDEx2,quietly=T)
 
-#
-readCount<-read.table(file="", header = T, sep='\t', row.names = 1)
-#metadata with patient identifiers
-meta <- read.table(file="", header=F, row.names=1, sep='\t')
+load("~/Documents/GitHub/dossantos2024study/Rdata/virginia.groups.Rda") #load Health v BV grouping vector for all 297 metatranscriptome samples
+save(df, file='~/Documents/GitHub/dossantos2024study/Rdata/virginia.groups.Rda')
+grouping <- write.csv (file="out.csv") 
+load("~/Documents/GitHub/dossantos2024study/Rdata/ko.virginia.filt.Rda") #load KO aggregated FILTERED feature table
+features<-save(df, file='~/Documents/GitHub/dossantos2024study/Rdata/ko.virginia.filt.Rda')
 ```
 
 1. ALDEx2 - t-test and Wilcoxon rank-sum test
 ```{r}
-read.keep <- readCount[keep,]
-aldex.out <- aldex(readCount, meta, gamma=1e-3)
-aldex.0.5 <- aldex(read.keep, conditions, gamma=0.5)
+aldexrun <- aldex(readCount,meta,gamma=0.2)
 
 ```
 
