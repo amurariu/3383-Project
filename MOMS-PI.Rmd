@@ -10,23 +10,19 @@ library(DESeq2,quietly=T)
 library(ALDEx2,quietly=T)
 
 load("~/Documents/GitHub/dossantos2024study/Rdata/virginia.groups.Rda") #load Health v BV grouping vector for all 297 metatranscriptome samples
-save(df, file='~/Documents/GitHub/dossantos2024study/Rdata/virginia.groups.Rda')
-grouping <- write.csv (file="out.csv") 
 load("~/Documents/GitHub/dossantos2024study/Rdata/ko.virginia.filt.Rda") #load KO aggregated FILTERED feature table
-features<-save(df, file='~/Documents/GitHub/dossantos2024study/Rdata/ko.virginia.filt.Rda')
 ```
 
 1. ALDEx2 - t-test and Wilcoxon rank-sum test
 ```{r}
-aldexrun <- aldex(readCount,meta,gamma=0.2)
-
+aldexrun <- aldex(ko.virginia.filt,virginia.groups$groups.2,gamma=0.2)
+aldex.plot(aldexrun)
 ```
 
 
 2. DESeq2 Analysis
 ```{r}
-read.keep <- readCount[keep,]
-dds <- DESeqDataSetFromMatrix(countData = read.keep,colData = conds, design= ~condition) 
+dds <- DESeqDataSetFromMatrix(countData = ko.virginia.filt,colData = virginia.groups$groups.2, design= ~condition)
 deseq2out <- DESeq (dds)
 res <- results(deseq2out)
 plotMA(res)
