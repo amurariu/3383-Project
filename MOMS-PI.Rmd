@@ -9,20 +9,25 @@ output: html_document
 library(DESeq2,quietly=T)
 library(ALDEx2,quietly=T)
 
-load("~/Documents/GitHub/dossantos2024study/Rdata/virginia.groups.Rda") #load Health v BV grouping vector for all 297 metatranscriptome samples
+load("~/Documents/github/dossantos2024study/Rdata/virginia.groups.Rda") #load Health v BV grouping vector for all 297 metatranscriptome samples
 load("~/Documents/GitHub/dossantos2024study/Rdata/ko.virginia.filt.Rda") #load KO aggregated FILTERED feature table
 ```
 
 1. ALDEx2 - t-test and Wilcoxon rank-sum test
 ```{r}
-aldexrun <- aldex(ko.virginia.filt,virginia.groups$groups.2,gamma=0.2)
+#
+gam <- aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = virginia.groups$groups.2)
+aldexrun <- aldex(ko.virginia.filt,virginia.groups$groups.2,gamma=gam)
 aldex.plot(aldexrun)
 ```
 
 
 2. DESeq2 Analysis
 ```{r}
-dds <- DESeqDataSetFromMatrix(countData = ko.virginia.filt,colData = virginia.groups$groups.2, design= ~condition)
+condition <- virginia.groups$groups.2
+conds <- data.frame(condition)
+conds$condition <- factor(conds$condition)
+dds <- DESeqDataSetFromMatrix(countData = ko.virginia.filt,colData = conds, design= ~conds)
 deseq2out <- DESeq (dds)
 res <- results(deseq2out)
 plotMA(res)
