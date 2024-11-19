@@ -27,7 +27,7 @@ aldex.plot(aldexrun)
 condition <- virginia.groups$groups.2
 conds <- data.frame(condition)
 conds$condition <- factor(conds$condition)
-dds <- DESeqDataSetFromMatrix(countData = ko.virginia.filt,colData = conds, design= ~conds)
+dds <- DESeqDataSetFromMatrix(countData = ko.virginia.filt,colData = conds, design= ~condition)
 deseq2out <- DESeq (dds)
 res <- results(deseq2out)
 plotMA(res)
