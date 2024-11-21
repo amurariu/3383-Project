@@ -40,7 +40,7 @@ conds$condition <- factor(conds$condition)
 
 ```{r}
 # use edgeR filtering for rows as SOP
-keep<-filterByExpr(y) 
+keep<-filterByExpr(readCount) 
 read.keep <- readCount[keep,]
 
 #Creating a DESeqDataSet

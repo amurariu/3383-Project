@@ -483,13 +483,13 @@ aldex.test.results.1.50[i,] <- c(size,TP.1.50,FP.1.50,sen.1.50,spec.1.50)
 
 
 ```{r}
-#------------------------ FDR CALCULATIONS FOR GAMMA=0.5, MU=0.15 (using we.eBH)---------------------------------
+#------------ FDR CALCULATIONS FOR GAMMA=0.5, MU=0.15 (using we.eBH, P<0.01)---------------------
 
 #---------------------------------------- For n=3 ----------------------------------------------------
 #labelling each category
 BV.idst <- grep("BV", virginia.groups$groups.2)
 H.idst <- grep("Healthy", virginia.groups$groups.2)
-refTPt <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 1)]
+refTPt <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -503,7 +503,7 @@ gam.subt <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.con
 sub.idst <- c(sample(H.idst,size), sample(BV.idst,size))
 sub.datat <- ko.virginia.filt[,sub.idst]
 aldex.subt <- aldex(sub.datat,sub.condt,gamma=gam.subt)
-sub.Pt <- rownames(aldex.subt)[which(abs(aldex.subt$we.eBH) > 1)]
+sub.Pt <- rownames(aldex.subt)[which(abs(aldex.subt$we.eBH) > 0.01)]
 aldex.plot(aldex.subt)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -518,7 +518,7 @@ aldex.test.results.t[i,] <- c(size,TPt,FPt,sent,spect)
 #labelling each category
 BV.idst5 <- grep("BV", virginia.groups$groups.2)
 H.idst5 <- grep("Healthy", virginia.groups$groups.2)
-refTPt5 <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 1)]
+refTPt5 <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -532,7 +532,7 @@ gam.subt5 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.co
 sub.idst5 <- c(sample(H.idst5,size), sample(BV.idst5,size))
 sub.datat5 <- ko.virginia.filt[,sub.idst5]
 aldex.subt5 <- aldex(sub.datat5,sub.condt5,gamma=gam.subt5)
-sub.Pt5 <- rownames(aldex.subt5)[which(abs(aldex.subt5$we.eBH) > 1)]
+sub.Pt5 <- rownames(aldex.subt5)[which(abs(aldex.subt5$we.eBH) > 0.01)]
 aldex.plot(aldex.subt5)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -547,7 +547,7 @@ aldex.test.results.t5[i,] <- c(size,TPt5,FPt5,sent5,spect5)
 #labelling each category
 BV.idst10 <- grep("BV", virginia.groups$groups.2)
 H.idst10 <- grep("Healthy", virginia.groups$groups.2)
-refTPt10 <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 1)]
+refTPt10 <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -561,7 +561,7 @@ gam.subt10 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.c
 sub.idst10 <- c(sample(H.idst10,size), sample(BV.idst10,size))
 sub.datat10 <- ko.virginia.filt[,sub.idst10]
 aldex.subt10 <- aldex(sub.datat10,sub.condt10,gamma=gam.subt10)
-sub.Pt10 <- rownames(aldex.subt10)[which(abs(aldex.subt10$we.eBH) > 1)]
+sub.Pt10 <- rownames(aldex.subt10)[which(abs(aldex.subt10$we.eBH) > 0.01)]
 aldex.plot(aldex.subt10)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -576,7 +576,7 @@ aldex.test.results.t10[i,] <- c(size,TPt10,FPt10,sent10,spect10)
 #labelling each category
 BV.idst20 <- grep("BV", virginia.groups$groups.2)
 H.idst20 <- grep("Healthy", virginia.groups$groups.2)
-refTPt20 <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 1)]
+refTPt20 <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -590,7 +590,7 @@ gam.subt20 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.c
 sub.idst20 <- c(sample(H.idst20,size), sample(BV.idst20,size))
 sub.datat20 <- ko.virginia.filt[,sub.idst20]
 aldex.subt20 <- aldex(sub.datat20,sub.condt20,gamma=gam.subt20)
-sub.Pt20 <- rownames(aldex.subt20)[which(abs(aldex.subt20$we.eBH) > 1)]
+sub.Pt20 <- rownames(aldex.subt20)[which(abs(aldex.subt20$we.eBH) > 0.01)]
 aldex.plot(aldex.subt20)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -605,7 +605,7 @@ aldex.test.results.t20[i,] <- c(size,TPt20,FPt20,sent20,spect20)
 #labelling each category
 BV.idst50 <- grep("BV", virginia.groups$groups.2)
 H.idst50 <- grep("Healthy", virginia.groups$groups.2)
-refTPt50 <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 1)]
+refTPt50 <- rownames(aldexrun)[which(abs(aldexrun$we.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -619,7 +619,7 @@ gam.subt50 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.c
 sub.idst50 <- c(sample(H.idst50,size), sample(BV.idst50,size))
 sub.datat50 <- ko.virginia.filt[,sub.idst50]
 aldex.subt50 <- aldex(sub.datat50,sub.condt50,gamma=gam.subt50)
-sub.Pt50 <- rownames(aldex.subt50)[which(abs(aldex.subt50$we.eBH) > 1)]
+sub.Pt50 <- rownames(aldex.subt50)[which(abs(aldex.subt50$we.eBH) > 0.01)]
 aldex.plot(aldex.subt50)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -632,13 +632,13 @@ aldex.test.results.t50[i,] <- c(size,TPt50,FPt50,sent50,spect50)
 ```
 
 ```{r}
-#------------------------ FDR CALCULATIONS FOR GAMMA=0.5, MU=0.15 (using wi.eBH)---------------------------------
+#--------------- FDR CALCULATIONS FOR GAMMA=0.5, MU=0.15 (using wi.eBH, P<0.01)----------------------------
 
 #---------------------------------------- For n=3 ----------------------------------------------------
 #labelling each category
 BV.idsw <- grep("BV", virginia.groups$groups.2)
 H.idsw <- grep("Healthy", virginia.groups$groups.2)
-refTPw <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 1)]
+refTPw <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -652,7 +652,7 @@ gam.subw <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.con
 sub.idsw <- c(sample(H.idsw,size), sample(BV.idsw,size))
 sub.dataw <- ko.virginia.filt[,sub.idsw]
 aldex.subw <- aldex(sub.dataw,sub.condw,gamma=gam.subw)
-sub.Pw <- rownames(aldex.subw)[which(abs(aldex.subw$wi.eBH) > 1)]
+sub.Pw <- rownames(aldex.subw)[which(abs(aldex.subw$wi.eBH) > 0.01)]
 aldex.plot(aldex.subw)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -667,7 +667,7 @@ aldex.test.results.w[i,] <- c(size,TPw,FPw,senw,specw)
 #labelling each category
 BV.idsw5 <- grep("BV", virginia.groups$groups.2)
 H.idsw5 <- grep("Healthy", virginia.groups$groups.2)
-refTPw5 <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 1)]
+refTPw5 <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -681,7 +681,7 @@ gam.subw5 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.co
 sub.idsw5 <- c(sample(H.idsw5,size), sample(BV.idsw5,size))
 sub.dataw5 <- ko.virginia.filt[,sub.idsw5]
 aldex.subw5 <- aldex(sub.dataw5,sub.condw5,gamma=gam.subw5)
-sub.Pw5 <- rownames(aldex.subw5)[which(abs(aldex.subw5$wi.eBH) > 1)]
+sub.Pw5 <- rownames(aldex.subw5)[which(abs(aldex.subw5$wi.eBH) > 0.01)]
 aldex.plot(aldex.subw5)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -696,7 +696,7 @@ aldex.test.results.w5[i,] <- c(size,TPw5,FPw5,senw5,specw5)
 #labelling each category
 BV.idsw10 <- grep("BV", virginia.groups$groups.2)
 H.idsw10 <- grep("Healthy", virginia.groups$groups.2)
-refTPw10 <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 1)]
+refTPw10 <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -710,7 +710,7 @@ gam.subtw0 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.c
 sub.idsw10 <- c(sample(H.idst10,size), sample(BV.idst10,size))
 sub.dataw10 <- ko.virginia.filt[,sub.idsw10]
 aldex.subw10 <- aldex(sub.dataw10,sub.condw10,gamma=gam.subw10)
-sub.Pw10 <- rownames(aldex.subw10)[which(abs(aldex.subw10$wi.eBH) > 1)]
+sub.Pw10 <- rownames(aldex.subw10)[which(abs(aldex.subw10$wi.eBH) > 0.01)]
 aldex.plot(aldex.subw10)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -725,7 +725,7 @@ aldex.test.results.w10[i,] <- c(size,TPw10,FPw10,senw10,specw10)
 #labelling each category
 BV.idsw20 <- grep("BV", virginia.groups$groups.2)
 H.idsw20 <- grep("Healthy", virginia.groups$groups.2)
-refTPw20 <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 1)]
+refTPw20 <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -739,7 +739,7 @@ gam.subw20 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.c
 sub.idsw20 <- c(sample(H.idsw20,size), sample(BV.idsw20,size))
 sub.dataw20 <- ko.virginia.filt[,sub.idsw20]
 aldex.subw20 <- aldex(sub.dataw20,sub.condt20,gamma=gam.subw20)
-sub.Pw20 <- rownames(aldex.subw20)[which(abs(aldex.subw20$wi.eBH) > 1)]
+sub.Pw20 <- rownames(aldex.subw20)[which(abs(aldex.subw20$wi.eBH) > 0.01)]
 aldex.plot(aldex.subw20)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -754,7 +754,7 @@ aldex.test.results.w20[i,] <- c(size,TPt20,FPt20,sent20,spect20)
 #labelling each category
 BV.idsw50 <- grep("BV", virginia.groups$groups.2)
 H.idsw50 <- grep("Healthy", virginia.groups$groups.2)
-refTPw50 <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 1)]
+refTPw50 <- rownames(aldexrun)[which(abs(aldexrun$wi.eBH) > 0.01)]
 
 # matrix of results
 n.iter = 100
@@ -768,7 +768,7 @@ gam.subw50 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.c
 sub.idsw50 <- c(sample(H.idsw50,size), sample(BV.idsw50,size))
 sub.dataw50 <- ko.virginia.filt[,sub.idsw50]
 aldex.subw50 <- aldex(sub.dataw50,sub.condw50,gamma=gam.subw50)
-sub.Pw50 <- rownames(aldex.subw50)[which(abs(aldex.subw50$wi.eBH) > 1)]
+sub.Pw50 <- rownames(aldex.subw50)[which(abs(aldex.subw50$wi.eBH) > 0.01)]
 aldex.plot(aldex.subw50)
 
 # TP,FP, Sensitivity, and Specificity Calculations
@@ -783,6 +783,8 @@ aldex.test.results.w50[i,] <- c(size,TPw50,FPw50,senw50,specw50)
 
 2. DESeq2 Analysis
 ```{r DESeq2}
+
+#Baseline DESeq2
 condition <- virginia.groups$groups.2
 conds <- data.frame(condition)
 conds$condition <- factor(conds$condition)
@@ -791,9 +793,44 @@ deseq2out <- DESeq (dds)
 res2 <- results(deseq2out)
 DESeq2::plotMA(res2) #need to reference deseq2 directly for ma plot
 #res2
+
+#EFFECT SIZE PLOT
 plot(res2$lfcSE, res2$log2FoldChange)
-plot(res2$lfcSE*sqrt(294), res$log2FoldChange)
+plot(res2$lfcSE*sqrt(294), res2$log2FoldChange)
 abline(0,1)
 abline(0,-1)
+
+##-----------------SAMPLING+PERMUTATION OF SAMPLE GROUPS FOR DESEQ2-----------------------
+
+BV.idd <- grep("BV", virginia.groups$groups.2)
+H.idd <- grep("Healthy", virginia.groups$groups.2)
+refTPd <- rownames(res2)[which(abs(res2$padj) > 0.01)]
+
+# matrix of results
+n.iter = 100
+deseq2.test.results <- matrix(data=NA, ncol=5, nrow=n.iter)
+colnames(deseq2.test.results) <- c("size", "TP", "FP","sens","spec")
+for(i in 1:100){
+size = 10
+sub.condd<- c(rep("H", size), rep("BV", size))
+sub.idsd <- c(sample(H.idd,size), sample(BV.idd,size))
+sub.datad <- ko.virginia.filt[,sub.idsd]
+
+#ddsd <- DESeqDataSetFromMatrix(countData = sub.datad, colData = sub.idsd, design= ~sub.condd)\
+
+res2d <- DESeq (ddsd)
+deseq2outd <- results(res2d)
+sub.deseq <-rownames(deseq2outd)[which(abs(deseq2outd$padj) > 0.01)]
+DESeq2::plotMA(res2d)
+
+# TP,FP, Sensitivity, and Specificity Calculations
+TPd <- sum(sub.deseq %in% refTPd)
+FPd <- sum(!(sub.deseq %in%refTPd))
+send <- TPd/length(refTPd)
+specd <- FPd/length(sub.deseq)
+deseq2.test.results[i,] <- c(size,TPd,FPd,send,specd)
+}
+
+
 ```
 
