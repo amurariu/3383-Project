@@ -118,7 +118,7 @@ aldex.plot(aldex.5)
 
 
 #Generating graphs for Wilcoxon and t-tests - need to verify how to get 2 different effect size plots for each
-aldex1e3wilc <- aldex.out <- aldex(read.keep, conditions,test="t",gamma=1e-3)
+aldex.out <- aldex(read.keep$effect, conditions,test="t",gamma=1e-3)
 aldex.plot(aldex1e3wilc)
 
 ```
@@ -151,8 +151,7 @@ aldex.plot(aldex.p.1)
 
 
 #trying to generate a for loop for random permutations
-for (x in 1:100) 
-  {set.seed(x)
+for (x in 1:100) {
   random.pre <- sample(presampl,size = 5)
   random.on <- sample(onsampl,size = 5)
   groups.10 <- conds2[c(random.pre,random.on)]
