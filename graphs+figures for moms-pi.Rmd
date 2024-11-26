@@ -31,6 +31,11 @@ load(file="output/aldex.g.1.10.Rda")
 load(file="output/aldex.g.1.20.Rda")
 load(file="output/aldex.g.1.50.Rda")
 
+load(file="output/aldex.test.results.w039.Rda")
+load(file="output/aldex.test.results.w59.Rda")
+load(file="output/aldex.test.results.w109.Rda")
+load(file="output/aldex.test.results.w209.Rda")
+load(file="output/aldex.test.results.w509.Rda")
 
 ```
 
@@ -65,6 +70,21 @@ specx<-complete$spec #combining data frames based on sensitivity/specificity and
 
 
 #calculating FDR and plotting FDR vs. size
+#start by generating data frames for each test result of interest and FDR calculations
+test1<-data.frame(aldex.test.results.w039)
+FDR<-test$FP/(test$FP+test$TP)
+test2<-data.frame(aldex.test.results.w59)
+FDR2<-test2$FP/(test2$FP+test2$TP)
+test3<-data.frame(aldex.test.results.w109)
+FDR3<-test3$FP/(test3$FP+test3$TP)
+test4<-data.frame(aldex.test.results.w209)
+FDR4<-test4$FP/(test4$FP+test4$TP)
+test5<-data.frame(aldex.test.results.w509)
+FDR5<-test5$FP/(test5$FP+test5$TP)
+mergedfull<-rbind(test,test2,test3,test4,test5) #merge all of the results into 1 data frame
+boundFDR<-rbind(FDR,FDR2,FDR3,FDR4,FDR5) #merge all of the FDR results into 1 data frame
+plot(mergedfull$size,boundFDR,xlim=c(0,50)) #generate a graph
+#problem - missing n=20, n=50?
 
 ```
 
