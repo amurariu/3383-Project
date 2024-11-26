@@ -18,25 +18,30 @@ load(file="output/aldex.mu0.15.5.Rda")
 load(file="output/aldex.mu0.15.10.Rda")
 load(file="output/aldex.mu0.15.20.Rda")
 load(file="output/aldex.mu0.15.50.Rda")
-#mu=0.5, effect size
+#gamma=0.5, effect size
 load(file="output/aldex.g0.5.3.Rda")
 load(file="output/aldex.g0.5.5.Rda")
 load(file="output/aldex.g0.5.10.Rda")
 load(file="output/aldex.g0.5.20.Rda")
 load(file="output/aldex.g0.5.50.Rda")
-#mu=1, effect size
+#gamma=1, effect size
 load(file="output/aldex.g.1.3.Rda")
 load(file="output/aldex.g.1.5.Rda")
 load(file="output/aldex.g.1.10.Rda")
 load(file="output/aldex.g.1.20.Rda")
 load(file="output/aldex.g.1.50.Rda")
-
+#gamma=1, wi.eBH
 load(file="output/aldex.test.results.w039.Rda")
 load(file="output/aldex.test.results.w59.Rda")
 load(file="output/aldex.test.results.w109.Rda")
 load(file="output/aldex.test.results.w209.Rda")
 load(file="output/aldex.test.results.w509.Rda")
-
+#DESeq2
+load(file="output/deseq2.test.results3.Rda")
+load(file="output/deseq2.test.results5.Rda")
+load(file="output/deseq2.test.results10.Rda")
+load(file="output/deseq2.test.results20.Rda")
+load(file="output/deseq2.test.results50.Rda")
 ```
 
 
@@ -85,6 +90,88 @@ mergedfull<-rbind(test,test2,test3,test4,test5) #merge all of the results into 1
 boundFDR<-rbind(FDR,FDR2,FDR3,FDR4,FDR5) #merge all of the FDR results into 1 data frame
 plot(mergedfull$size,boundFDR,xlim=c(0,50)) #generate a graph
 #problem - missing n=20, n=50?
+
+```
+```{r}
+#MA plot comparing original with diff sample sizes and permutations
+#original MA plot
+condition <- virginia.groups$groups.2
+conds <- data.frame(condition)
+conds$condition <- factor(conds$condition)
+dds <- DESeqDataSetFromMatrix(countData = ko.virginia.filt,colData = conds, design= ~condition)
+deseq2out <- DESeq (dds)
+res2 <- results(deseq2out)
+par(mfrow= c(1,1))
+DESeq2::plotMA(res2, alpha=0.01,colSig="blue")
+
+#MA plot for n=3
+size = 3
+condition3<- c(rep("H", size), rep("BV", size)) # vector of conditions
+sub.condd3 <- data.frame(condition3) # make a dataframe from the vector
+sub.condd3$condition3 <- factor(sub.condd3$condition3) # get the factors of the condition
+sub.idsd3 <- c(sample(H.idd3,size), sample(BV.idd3,size))
+sub.datad3 <- ko.virginia.filt[,sub.idsd3]
+ddsd3 <- DESeqDataSetFromMatrix(countData = sub.datad3, colData = sub.condd3, design= ~condition3)
+resd3 <- DESeq (ddsd3)
+deseq2outd3 <- results(resd3)
+sub.deseq3 <-rownames(deseq2outd3)[which(abs(deseq2outd3$padj) < 0.01)]
+
+#MA plot for n=5
+size = 5
+condition5<- c(rep("H", size), rep("BV", size)) # vector of conditions
+sub.condd5 <- data.frame(condition5) # make a dataframe from the vector
+sub.condd5$condition5 <- factor(sub.condd5$condition5) # get the factors of the condition
+sub.idsd5 <- c(sample(H.idd5,size), sample(BV.idd5,size))
+sub.datad5 <- ko.virginia.filt[,sub.idsd5]
+ddsd5 <- DESeqDataSetFromMatrix(countData = sub.datad5, colData = sub.condd5, design= ~condition5)
+res2d5 <- DESeq (ddsd5)
+deseq2outd5 <- results(res2d5)
+sub.deseq5 <-rownames(deseq2outd5)[which(abs(deseq2outd5$padj) < 0.01)]
+
+#MA plot for n=10
+size = 10
+condition10<- c(rep("H", size), rep("BV", size)) # vector of conditions
+sub.condd10 <- data.frame(condition10) # make a dataframe from the vector
+sub.condd10$condition10 <- factor(sub.condd10$condition10) # get the factors of the condition
+sub.idsd10 <- c(sample(H.idd10,size), sample(BV.idd10,size))
+sub.datad10 <- ko.virginia.filt[,sub.idsd10]
+ddsd10 <- DESeqDataSetFromMatrix(countData = sub.datad10, colData = sub.condd10, design= ~condition10)
+res2d10 <- DESeq (ddsd10)
+deseq2outd10 <- results(res2d10)
+sub.deseq10 <-rownames(deseq2outd10)[which(abs(deseq2outd10$padj) < 0.01)]
+
+#MA plot for n=20
+size = 20
+condition20<- c(rep("H", size), rep("BV", size)) # vector of conditions
+sub.condd20 <- data.frame(condition20) # make a dataframe from the vector
+sub.condd20$condition20 <- factor(sub.condd20$condition20) # get the factors of the condition
+sub.idsd20 <- c(sample(H.idd20,size), sample(BV.idd20,size))
+sub.datad20 <- ko.virginia.filt[,sub.idsd20]
+ddsd20 <- DESeqDataSetFromMatrix(countData = sub.datad20, colData = sub.condd20, design= ~condition20)
+res2d20 <- DESeq (ddsd20)
+deseq2outd20 <- results(res2d20)
+sub.deseq20 <-rownames(deseq2outd20)[which(abs(deseq2outd20$padj) < 0.01)]
+
+#MA plot for n=50
+size = 50
+condition50<- c(rep("H", size), rep("BV", size)) # vector of conditions
+sub.condd50 <- data.frame(condition50) # make a dataframe from the vector
+sub.condd50$condition50 <- factor(sub.condd50$condition50) # get the factors of the condition
+sub.idsd50 <- c(sample(H.idd50,size), sample(BV.idd50,size))
+sub.datad50 <- ko.virginia.filt[,sub.idsd50]
+ddsd50 <- DESeqDataSetFromMatrix(countData = sub.datad50, colData = sub.condd50, design= ~condition50)
+res2d50 <- DESeq (ddsd50)
+deseq2outd50 <- results(res2d50)
+sub.deseq50 <-rownames(deseq2outd50)[which(abs(deseq2outd50$padj) < 0.01)]
+
+#panel production
+par(mfrow= c(2,3))
+DESeq2::plotMA(res2, alpha=0.01,colSig="blue")
+DESeq2::plotMA(resd3,alpha=0.01,colSig="blue")
+DESeq2::plotMA(res2d5, alpha=0.01, colSig="blue")
+DESeq2::plotMA(res2d10,alpha=0.01, colSig="blue")
+DESeq2::plotMA(res2d20,alpha=0.01, colSig="blue")
+DESeq2::plotMA(res2d50,alpha=0.01, colSig="blue")
 
 ```
 
