@@ -426,11 +426,16 @@ boxplot(1-df11$spec, 1-df12$spec, 1-df13$spec, 1-df14$spec, 1-df15$spec, add=T, 
 dev.off()
 
 ```
+
 ```{r}
 ##GRAPHS FOR Specificity
-pdf(file="SPEC.pdf", width=12,height=8)
-stripchart(list(1-df1$spec, 1-df2$spec,1-df3$spec, 1-df4$spec, 1-df5$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Specificity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+pdf(file="loc+scale+spec.pdf", width=16,height=8)
+par(mfrow=c(1,2))
+stripchart(list(1-df1$spec, 1-df2$spec,1-df3$spec, 1-df4$spec, 1-df5$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Specificity",group.names=c("n=3","n=5","n=10","n=20","n=50"), main="Specificity of Effect-Sizes with Location and Scale Present")
 boxplot(1-df1$spec, 1-df2$spec, 1-df3$spec, 1-df4$spec, 1-df5$spec, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+##SPECIFICITY VS. SIZE for mu=0.15 gamma=0.5
+stripchart(list(df1$sens, df2$sens,df3$sens, df4$sens, df5$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"),main="Sensitivity of Effect-Sizes with Location and Scale Present")
+boxplot(df1$sens, df2$sens, df3$sens, df4$sens, df5$sens, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
 dev.off()
 
 #specificity graph
@@ -445,11 +450,7 @@ boxplot(1-df11$spec, 1-df12$spec, 1-df13$spec, 1-df14$spec, 1-df15$spec, add=T, 
 dev.off()
 
 
-##SPECIFICITY VS. SIZE for mu=0.15 gamma=0.5
-pdf(file="SENS 330pm.pdf", width=12,height=8)
-stripchart(list(df1$sens, df2$sens,df3$sens, df4$sens, df5$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
-boxplot(df1$sens, df2$sens, df3$sens, df4$sens, df5$sens, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
-dev.off()
+
 
 #comparison of sensitivity across aldex2 tests
 pdf(file="SENSfixed.pdf", width=10,height=4)
@@ -479,8 +480,9 @@ summary(aldex.test.results.t50)
 
 load(file="output/aldex.test.results.w20V2.Rda")
 load(file="output/aldex.test.results.w50V2.Rda")
-aldexres<-aldex.test.results.w50
-aldexres2<-aldex.test.results.w50
+load(file="output/n20wil.Rda")
+load(file="output/n50wilc.Rda")
+
 
 #ALDEx2 effect, wi.eBH, we.eBH, and DESeq2 for location present and with location not present
 df4<-data.frame(aldex.test.results.20)
@@ -493,23 +495,23 @@ df20<-data.frame(aldex.test.results.t200)
 df21<-data.frame(aldex.test.results.w208)
 
 
-pdf(file="combinedpanelwith4tools.pdf",width=7,height=8)
+pdf(file="updatedspecpanelwith4tools.pdf",width=14,height=8)
 par(mfrow= c(1,2))
 
-stripchart(list(1-df4$spec, 1-df16$spec,1-df17$spec, 1-df18$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Tool", ylab="Specificity",main="With Location",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+stripchart(list(1-df4$spec, 1-df16$spec,1-df17$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Tool", ylab="Specificity",group.names=c("Effect-Size","t-test","Wilcoxon"), main="Comparison of Specificity of Tools with Location and Scale")
 boxplot(1-df4$spec, 1-df16$spec, 1-df17$spec, 1-df18$spec, add=T, col=rgb(0,0,0,0),names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
 
-stripchart(list(1-df19$spec, 1-df20$spec,1-df21$spec, 1-df18$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Tool", ylab="Specificity",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"),main="Without Location")
+stripchart(list(1-df19$spec, 1-df20$spec,1-df21$spec, 1-df18$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Tool", ylab="Specificity",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"),main="Comparison of Specificity of Tools Without Location")
 boxplot(1-df19$spec, 1-df20$spec, 1-df21$spec, 1-df18$spec, add=T, col=rgb(0,0,0,0),names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
 
 dev.off()
 
-pdf(file="SENScombinedpanelwith4tools.pdf",width=8,height=8)
+pdf(file="updatedsenspanelwith4tools.pdf",width=14,height=8)
 par(mfrow= c(1,2))
-stripchart(list(df4$sens, df16$sens,df17$sens, df18$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",main="With Location",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+stripchart(list(df4$sens, df16$sens,df17$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("Effect-Size","t-test","Wilcoxon"),main="Comparison of Sensitivity of Tools with Location and Scale")
 boxplot(df4$sens, df16$sens,df17$sens, df18$sens, add=T, col=rgb(0,0,0,0),names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
 
-stripchart(list(df19$sens, df20$sens,df21$sens, df18$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",main="Without Location",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+stripchart(list(df19$sens, df20$sens,df21$sens, df18$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",main="Comparison of Sensitivity of Tools without Location",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
 boxplot(df19$sens, df20$sens, df21$sens, df18$sens, add=T, col=rgb(0,0,0,0),names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
 
 dev.off()
