@@ -17,7 +17,7 @@ load(file="output/aldex.mu0.15.3.Rda")
 load(file="output/aldex.mu0.15.5.Rda")
 load(file="output/aldex.mu0.15.10.Rda")
 load(file="output/aldex.mu0.15.20.Rda")
-load(file="output/aldex.mu0.15.50.Rda")
+load(file="output/aldex.mu0.15.50v2.Rda")
 #gamma=0.5, effect size
 load(file="output/aldex.g0.5.3.Rda")
 load(file="output/aldex.g0.5.5.Rda")
@@ -29,39 +29,151 @@ load(file="output/aldex.g.1.3.Rda")
 load(file="output/aldex.g.1.5.Rda")
 load(file="output/aldex.g.1.10.Rda")
 load(file="output/aldex.g.1.20.Rda")
-load(file="output/aldex.g.1.50.Rda")
+#gamma=0.5, we.eBH
+load(file="output/aldex.test.results.t0.Rda")
+load(file="output/aldex.test.results.t05.Rda")
+load(file="output/aldex.test.results.t100.Rda")
+load(file="output/aldex.test.results.t200.Rda")
+load(file="output/aldex.test.results.t500.Rda")
+#gamma=0.5, mu=0.15, we.eBH
+load(file="output/aldex.test.results.t.Rda")
+load(file="output/aldex.test.results.t5.Rda")
+load(file="output/aldex.test.results.t10.Rda")
+load(file="output/aldex.test.results.t20.Rda")
+load(file="output/aldex.test.results.t50.Rda")
+#gamma=1, we.eBH
+load(file="output/aldex.test.results.t06.Rda")
+load(file="output/aldex.test.results.t56.Rda")
+load(file="output/aldex.test.results.t106.Rda")
+load(file="output/aldex.test.results.t206.Rda")
+load(file="output/aldex.test.results.t506.Rda")
+#gamma=0.5, wi.eBH
+load(file="output/aldex.test.results.w03.Rda")
+load(file="output/aldex.test.results.w58.Rda")
+load(file="output/aldex.test.results.w108.Rda")
+load(file="output/aldex.test.results.w208.Rda")
+load(file="output/aldex.test.results.w508.Rda")
+#gamma 0.5, mu=0.15, wi.eBH
+load(file="output/aldex.test.results.w.Rda")
+load(file="output/aldex.test.results.w5.Rda")
+load(file="output/aldex.test.results.w10.Rda")
 #gamma=1, wi.eBH
 load(file="output/aldex.test.results.w039.Rda")
 load(file="output/aldex.test.results.w59.Rda")
 load(file="output/aldex.test.results.w109.Rda")
 load(file="output/aldex.test.results.w209.Rda")
 load(file="output/aldex.test.results.w509.Rda")
+
 #DESeq2
 load(file="output/deseq2.test.results3.Rda")
 load(file="output/deseq2.test.results5.Rda")
 load(file="output/deseq2.test.results10.Rda")
 load(file="output/deseq2.test.results20.Rda")
 load(file="output/deseq2.test.results50.Rda")
+
+load(file="output/aldexwilc20.Rda")
+load(file="output/aldex.wilc50.Rda")
+
 ```
 
 
 
 ```{r}
 ##graphs & figures
+par(mfrow= c(3,3))
+BV.ids <- grep("BV", virginia.groups$groups.2)
+H.ids <- grep("Healthy", virginia.groups$groups.2)
+refTP <- rownames(aldexrun)[which(abs(aldexrun$effect) > 1)]
+size = 3
+sub.cond <- c(rep("H", size), rep("BV", size))
+gam.sub <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.cond )
+sub.ids <- c(sample(H.ids,size), sample(BV.ids,size))
+sub.data <- ko.virginia.filt[,sub.ids]
+aldex.sub10 <- aldex(sub.data,sub.cond,gamma=gam.sub)
+sub.P <- rownames(aldex.sub)[which(abs(aldex.sub$effect) > 1)]
+
+size = 10
+sub.cond <- c(rep("H", size), rep("BV", size))
+gam.sub <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.cond )
+sub.ids <- c(sample(H.ids,size), sample(BV.ids,size))
+sub.data <- ko.virginia.filt[,sub.ids]
+aldex.sub10 <- aldex(sub.data,sub.cond,gamma=gam.sub)
+sub.P <- rownames(aldex.sub)[which(abs(aldex.sub$effect) > 1)]
+
+size = 50
+sub.cond <- c(rep("H", size), rep("BV", size))
+gam.sub <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.cond )
+sub.ids <- c(sample(H.ids,size), sample(BV.ids,size))
+sub.data <- ko.virginia.filt[,sub.ids]
+aldex.sub50 <- aldex(sub.data,sub.cond,gamma=gam.sub)
+sub.P <- rownames(aldex.sub)[which(abs(aldex.sub$effect) > 1)]
+
+size = 3
+sub.cond <- c(rep("H", size), rep("BV", size))
+gam.sub <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0,0), conditions = sub.cond )
+sub.ids <- c(sample(H.ids,size), sample(BV.ids,size))
+sub.data <- ko.virginia.filt[,sub.ids]
+aldex.sub.0.5.3 <- aldex(sub.data,sub.cond,gamma=gam.sub)
+sub.P <- rownames(aldex.sub)[which(abs(aldex.sub$effect) > 1)]
+
+size = 10
+sub.cond <- c(rep("H", size), rep("BV", size))
+gam.sub <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0,0), conditions = sub.cond )
+sub.ids <- c(sample(H.ids,size), sample(BV.ids,size))
+sub.data <- ko.virginia.filt[,sub.ids]
+aldex.sub.0.5.10 <- aldex(sub.data,sub.cond,gamma=gam.sub)
+sub.P <- rownames(aldex.sub)[which(abs(aldex.sub$effect) > 1)]
+
+size = 50
+sub.cond <- c(rep("H", size), rep("BV", size))
+gam.sub <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0,0), conditions = sub.cond )
+sub.ids <- c(sample(H.ids,size), sample(BV.ids,size))
+sub.data <- ko.virginia.filt[,sub.ids]
+aldex.sub.0.5.50 <- aldex(sub.data,sub.cond,gamma=gam.sub)
+sub.P <- rownames(aldex.sub)[which(abs(aldex.sub$effect) > 1)]
+
+size = 3
+sub.cond <- c(rep("H", size), rep("BV", size))
+gam.sub <-  aldex.makeScaleMatrix(gamma=1, mu=c(0,0), conditions = sub.cond )
+sub.ids <- c(sample(H.ids,size), sample(BV.ids,size))
+sub.data <- ko.virginia.filt[,sub.ids]
+aldex.sub.1.3 <- aldex(sub.data,sub.cond,gamma=gam.sub)
+sub.P <- rownames(aldex.sub)[which(abs(aldex.sub$effect) > 1)]
+
+size = 10
+sub.cond <- c(rep("H", size), rep("BV", size))
+gam.sub <-  aldex.makeScaleMatrix(gamma=1, mu=c(0,0), conditions = sub.cond )
+sub.ids <- c(sample(H.ids,size), sample(BV.ids,size))
+sub.data <- ko.virginia.filt[,sub.ids]
+aldex.sub.1.5 <- aldex(sub.data,sub.cond,gamma=gam.sub)
+sub.P <- rownames(aldex.sub)[which(abs(aldex.sub$effect) > 1)]
+
+size = 50
+sub.cond <- c(rep("H", size), rep("BV", size))
+gam.sub <-  aldex.makeScaleMatrix(gamma=1, mu=c(0,0), conditions = sub.cond )
+sub.ids <- c(sample(H.ids,size), sample(BV.ids,size))
+sub.data <- ko.virginia.filt[,sub.ids]
+aldex.sub1.50 <- aldex(sub.data,sub.cond,gamma=gam.sub)
 
 ## effect size plots for n=3,10,5
 par(mfrow= c(3,3))
-aldex.plot(aldex.sub,called.col="purple",test="effect",cutoff.pval=0.01)
-aldex.plot(aldex.sub10,called.col="purple",test="effect",cutoff.pval=0.01)
-aldex.plot(aldex.sub50,called.col="purple",test="effect",cutoff.pval=0.01)
-aldex.plot(aldex.sub.0.5.3,called.col="purple",test="effect",cutoff.pval=0.01)
-aldex.plot(aldex.sub.0.5.5,called.col="purple",test="effect",cutoff.pval=0.01)
-aldex.plot(aldex.sub.0.5.10,called.col="purple",test="effect",cutoff.pval=0.01)
-aldex.plot(aldex.sub.1.3,called.col="purple",test="effect",cutoff.pval=0.01)
-aldex.plot(aldex.sub.1.5,called.col="purple",test="effect",cutoff.pval=0.01)
-aldex.plot(aldex.sub.1.10,called.col="purple",test="effect",cutoff.pval=0.01)
+aldex.plot(aldex.sub,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub10,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub50,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.0.5.3,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.0.5.5,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.0.5.10,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.1.3,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.1.5,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.1.50,called.col="purple",test="effect",cutoff.effect=1)
 
+
+```
+
+
+```{r}
 #generating sensitivity vs. size plots
+#step 1: converting the aldex results into data frames
 #step 1: converting the aldex results into data frames
 df1<-data.frame(aldex.test.results.3)
 df2<-data.frame(aldex.test.results.5)
@@ -92,6 +204,7 @@ plot(mergedfull$size,boundFDR,xlim=c(0,50)) #generate a graph
 #problem - missing n=20, n=50?
 
 ```
+
 ```{r}
 #MA plot comparing original with diff sample sizes and permutations
 #original MA plot
@@ -103,13 +216,16 @@ deseq2out <- DESeq (dds)
 res2 <- results(deseq2out)
 par(mfrow= c(1,1))
 DESeq2::plotMA(res2, alpha=0.01,colSig="blue")
+BV.idd <- grep("BV", virginia.groups$groups.2)
+H.idd <- grep("Healthy", virginia.groups$groups.2)
+refTPd <- rownames(res2)[which(abs(res2$padj) < 0.01)]
 
 #MA plot for n=3
 size = 3
 condition3<- c(rep("H", size), rep("BV", size)) # vector of conditions
 sub.condd3 <- data.frame(condition3) # make a dataframe from the vector
 sub.condd3$condition3 <- factor(sub.condd3$condition3) # get the factors of the condition
-sub.idsd3 <- c(sample(H.idd3,size), sample(BV.idd3,size))
+sub.idsd3 <- c(sample(H.idd,size), sample(BV.idd,size))
 sub.datad3 <- ko.virginia.filt[,sub.idsd3]
 ddsd3 <- DESeqDataSetFromMatrix(countData = sub.datad3, colData = sub.condd3, design= ~condition3)
 resd3 <- DESeq (ddsd3)
@@ -121,7 +237,7 @@ size = 5
 condition5<- c(rep("H", size), rep("BV", size)) # vector of conditions
 sub.condd5 <- data.frame(condition5) # make a dataframe from the vector
 sub.condd5$condition5 <- factor(sub.condd5$condition5) # get the factors of the condition
-sub.idsd5 <- c(sample(H.idd5,size), sample(BV.idd5,size))
+sub.idsd5 <- c(sample(H.idd,size), sample(BV.idd,size))
 sub.datad5 <- ko.virginia.filt[,sub.idsd5]
 ddsd5 <- DESeqDataSetFromMatrix(countData = sub.datad5, colData = sub.condd5, design= ~condition5)
 res2d5 <- DESeq (ddsd5)
@@ -133,7 +249,7 @@ size = 10
 condition10<- c(rep("H", size), rep("BV", size)) # vector of conditions
 sub.condd10 <- data.frame(condition10) # make a dataframe from the vector
 sub.condd10$condition10 <- factor(sub.condd10$condition10) # get the factors of the condition
-sub.idsd10 <- c(sample(H.idd10,size), sample(BV.idd10,size))
+sub.idsd10 <- c(sample(H.idd,size), sample(BV.idd,size))
 sub.datad10 <- ko.virginia.filt[,sub.idsd10]
 ddsd10 <- DESeqDataSetFromMatrix(countData = sub.datad10, colData = sub.condd10, design= ~condition10)
 res2d10 <- DESeq (ddsd10)
@@ -145,7 +261,7 @@ size = 20
 condition20<- c(rep("H", size), rep("BV", size)) # vector of conditions
 sub.condd20 <- data.frame(condition20) # make a dataframe from the vector
 sub.condd20$condition20 <- factor(sub.condd20$condition20) # get the factors of the condition
-sub.idsd20 <- c(sample(H.idd20,size), sample(BV.idd20,size))
+sub.idsd20 <- c(sample(H.idd,size), sample(BV.idd,size))
 sub.datad20 <- ko.virginia.filt[,sub.idsd20]
 ddsd20 <- DESeqDataSetFromMatrix(countData = sub.datad20, colData = sub.condd20, design= ~condition20)
 res2d20 <- DESeq (ddsd20)
@@ -157,7 +273,7 @@ size = 50
 condition50<- c(rep("H", size), rep("BV", size)) # vector of conditions
 sub.condd50 <- data.frame(condition50) # make a dataframe from the vector
 sub.condd50$condition50 <- factor(sub.condd50$condition50) # get the factors of the condition
-sub.idsd50 <- c(sample(H.idd50,size), sample(BV.idd50,size))
+sub.idsd50 <- c(sample(H.idd,size), sample(BV.idd,size))
 sub.datad50 <- ko.virginia.filt[,sub.idsd50]
 ddsd50 <- DESeqDataSetFromMatrix(countData = sub.datad50, colData = sub.condd50, design= ~condition50)
 res2d50 <- DESeq (ddsd50)
@@ -165,13 +281,238 @@ deseq2outd50 <- results(res2d50)
 sub.deseq50 <-rownames(deseq2outd50)[which(abs(deseq2outd50$padj) < 0.01)]
 
 #panel production
+pdf(file="MA plots.pdf", width=12,height=8)
+
 par(mfrow= c(2,3))
-DESeq2::plotMA(res2, alpha=0.01,colSig="blue")
-DESeq2::plotMA(resd3,alpha=0.01,colSig="blue")
-DESeq2::plotMA(res2d5, alpha=0.01, colSig="blue")
-DESeq2::plotMA(res2d10,alpha=0.01, colSig="blue")
-DESeq2::plotMA(res2d20,alpha=0.01, colSig="blue")
-DESeq2::plotMA(res2d50,alpha=0.01, colSig="blue")
+DESeq2::plotMA(res2, alpha=0.01,colSig="blue",main="Baseline")
+DESeq2::plotMA(resd3,alpha=0.01,colSig="blue",main="n=3")
+DESeq2::plotMA(res2d5, alpha=0.01, colSig="blue",main="n=5")
+DESeq2::plotMA(res2d10,alpha=0.01, colSig="blue",main="n=10")
+DESeq2::plotMA(res2d20,alpha=0.01, colSig="blue",main="n=20")
+DESeq2::plotMA(res2d50,alpha=0.01, colSig="blue",main="n=50")
+
+dev.off()
+
+```
+
+```{r}
+df1<-data.frame(aldex.test.results.3)
+df2<-data.frame(aldex.test.results.5)
+df3<-data.frame(aldex.test.results.10)
+df4<-data.frame(aldex.test.results.20)
+df5<-data.frame(aldex.test.results.50.test2)
+complete<-rbind(df1,df2,df3,df4,df5)
+sizex<-complete$size
+sensx<-complete$sens
+specx<-complete$spec
+
+pdf(file="FDR vs. size.pdf", width=12,height=8)
+
+stripchart(list(1-df1$spec, 1-df2$spec, 1-df3$spec, 1-df4$spec, 1-df5$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+boxplot(1-df1$spec, 1-df2$spec, 1-df3$spec, 1-df4$spec, 1-df5$spec, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+dev.off()
+
+```
+```{r}
+##fixing wilcoxon n=20 and n=50
+
+gam3 <- aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = virginia.groups$groups.2)
+aldexrun7 <- aldex(ko.virginia.filt,virginia.groups$groups.2,gamma=gam3)
+aldex.plot(aldexrun7)
+
+BV.idsw <- grep("BV", virginia.groups$groups.2)
+H.idsw <- grep("Healthy", virginia.groups$groups.2)
+refTPw <- rownames(aldexrun7)[which(abs(aldexrun7$wi.eBH) < 0.01)]
+
+# matrix of results
+n.iter = 100
+aldex.test.wilc20 <- matrix(data=NA, ncol=5, nrow=n.iter)
+colnames(aldex.test.wilc20) <- c("size", "TP", "FP","sens","spec")
+for(i in 1:100){
+size = 20
+sub.condw <- c(rep("H", size), rep("BV", size))
+sub.idsw <- c(sample(H.idsw,size), sample(BV.idsw,size))
+gam.subw <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.condw)
+sub.dataw <- ko.virginia.filt[,sub.idsw]
+aldex.subw <- aldex(sub.dataw,sub.condw,gamma=gam.subw)
+sub.Pw <- rownames(aldex.subw)[which(abs(aldex.subw$wi.eBH) < 0.01)]
+#aldex.plot(aldex.subw)
+
+# TP,FP, Sensitivity, and Specificity Calculations
+TPw <- sum(sub.Pw %in% refTPw)
+FPw <- sum(!(sub.Pw %in%refTPw))
+senw <- TPw/length(refTPw)
+specw <- FPw/length(sub.Pw)
+aldex.test.wilc20[i,] <- c(size,TPw,FPw,senw,specw)
+}
+save(aldex.test.wilc20, file="output/n20wil.Rda")
+
+
+
+
+BV.idsw <- grep("BV", virginia.groups$groups.2)
+H.idsw <- grep("Healthy", virginia.groups$groups.2)
+refTPw <- rownames(aldexrun7)[which(abs(aldexrun7$wi.eBH) < 0.01)]
+
+# matrix of results
+n.iter = 100
+aldex.wilc50<- matrix(data=NA, ncol=5, nrow=n.iter)
+colnames(aldex.wilc50) <- c("size", "TP", "FP","sens","spec")
+for(i in 1:100){
+size = 50
+sub.condw <- c(rep("H", size), rep("BV", size))
+sub.idsw <- c(sample(H.idsw,size), sample(BV.idsw,size))
+gam.subw <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.condw)
+sub.dataw <- ko.virginia.filt[,sub.idsw]
+aldex.subw <- aldex(sub.dataw,sub.condw,gamma=gam.subw)
+sub.Pw <- rownames(aldex.subw)[which(abs(aldex.subw$wi.eBH) < 0.01)]
+#aldex.plot(aldex.subw)
+
+# TP,FP, Sensitivity, and Specificity Calculations
+TPw <- sum(sub.Pw %in% refTPw)
+FPw <- sum(!(sub.Pw %in%refTPw))
+senw <- TPw/length(refTPw)
+specw <- FPw/length(sub.Pw)
+aldex.wilc50[i,] <- c(size,TPw,FPw,senw,specw)
+}
+save(aldex.wilc50, file="output/n50wilc.Rda")
+
+```
+
+
+
+```{r}
+pdf(file="effect-size-plots-for-report.pdf", width=10,height=8)
+
+par(mfrow= c(3,3))
+aldex.plot(aldex.sub,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub10,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub50,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.0.5.3,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.0.5.10,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.0.5.50,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.1.3,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub.1.5,called.col="purple",test="effect",cutoff.effect=1)
+aldex.plot(aldex.sub1.50,called.col="purple",test="effect",cutoff.pval=0.01)
+
+dev.off()
+```
+
+```{r}
+df6<-data.frame(aldex.test.results.0.5.3)
+df7<-data.frame(aldex.test.results.0.5.5)
+df8<-data.frame(aldex.test.results.0.5.10)
+df9<-data.frame(aldex.test.results.0.5.20)
+df10<-data.frame(aldex.test.results.0.5.50)
+
+df11<-data.frame(aldex.test.results.1.3)
+df12<-data.frame(aldex.test.results.1.5)
+df13<-data.frame(aldex.test.results.1.10)
+df14<-data.frame(aldex.test.results.1.20)
+df15<-data.frame(aldex.test.results.1.50)
+
+
+pdf(file="FDR vs. size between aldex.pdf", width=12,height=4)
+
+par(mfrow= c(1,3))
+stripchart(list(1-df1$spec, 1-df2$spec, 1-df3$spec, 1-df4$spec, 1-df5$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"),main="gamma=0.15 and mu=0.5")
+boxplot(1-df1$spec, 1-df2$spec, 1-df3$spec, 1-df4$spec, 1-df5$spec, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+
+stripchart(list(1-df6$spec, 1-df7$spec, 1-df8$spec, 1-df9$spec, 1-df10$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"),main="gamma=0.5")
+boxplot(1-df6$spec, 1-df7$spec, 1-df8$spec, 1-df9$spec, 1-df10$spec, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+
+stripchart(list(1-df11$spec, 1-df12$spec, 1-df13$spec, 1-df14$spec, 1-df15$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"),main="gamma=1")
+boxplot(1-df11$spec, 1-df12$spec, 1-df13$spec, 1-df14$spec, 1-df15$spec, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+dev.off()
+
+```
+```{r}
+##GRAPHS FOR Specificity
+pdf(file="SPEC.pdf", width=12,height=8)
+stripchart(list(1-df1$spec, 1-df2$spec,1-df3$spec, 1-df4$spec, 1-df5$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Specificity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+boxplot(1-df1$spec, 1-df2$spec, 1-df3$spec, 1-df4$spec, 1-df5$spec, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+dev.off()
+
+#specificity graph
+pdf(file="SPECPANEL.pdf",width=10,height=4)
+par(mfrow= c(1,3))
+stripchart(list(1-df1$spec, 1-df2$spec,1-df3$spec, 1-df4$spec, 1-df5$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Specificity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+boxplot(1-df1$spec, 1-df2$spec, 1-df3$spec, 1-df4$spec, 1-df5$spec, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+stripchart(list(1-df6$spec, 1-df7$spec,1-df8$spec, 1-df9$spec, 1-df10$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Specificity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+boxplot(1-df6$spec, 1-df7$spec, 1-df8$spec, 1-df9$spec, 1-df10$spec, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+stripchart(list(1-df11$spec, 1-df12$spec,1-df13$spec, 1-df14$spec, 1-df15$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Specificity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+boxplot(1-df11$spec, 1-df12$spec, 1-df13$spec, 1-df14$spec, 1-df15$spec, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+dev.off()
+
+
+##SPECIFICITY VS. SIZE for mu=0.15 gamma=0.5
+pdf(file="SENS 330pm.pdf", width=12,height=8)
+stripchart(list(df1$sens, df2$sens,df3$sens, df4$sens, df5$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+boxplot(df1$sens, df2$sens, df3$sens, df4$sens, df5$sens, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+dev.off()
+
+#comparison of sensitivity across aldex2 tests
+pdf(file="SENSfixed.pdf", width=10,height=4)
+par(mfrow= c(1,3))
+stripchart(list(df1$sens, df2$sens,df3$sens, df4$sens, df5$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+boxplot(df1$sens, df2$sens, df3$sens, df4$sens, df5$sens, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+stripchart(list(df6$sens, df7$sens,df8$sens, df9$sens, df10$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+boxplot(df6$sens, df7$sens, df8$sens, df9$sens, df10$sens, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+stripchart(list(df11$sens, df12$sens,df13$sens, df14$sens, df15$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",group.names=c("n=3","n=5","n=10","n=20","n=50"))
+boxplot(df11$sens, df12$sens, df13$sens, df14$sens, df15$sens, add=T, col=rgb(0,0,0,0),names=c("n=3","n=5","n=10","n=20","n=50"))
+dev.off()
+```
+
+```{r}
+summary(deseq2.test.results10)
+summary(deseq2.test.results50)
+summary(aldex.test.results.10)
+summary(aldex.test.results.50.test2)
+summary(aldex.test.results.w10)
+summary(aldex.test.results.w50)
+summary(aldex.test.results.t10)
+summary(aldex.test.results.t50)
+
+```
+
+```{r}
+
+load(file="output/aldex.test.results.w20V2.Rda")
+load(file="output/aldex.test.results.w50V2.Rda")
+aldexres<-aldex.test.results.w50
+aldexres2<-aldex.test.results.w50
+
+#ALDEx2 effect, wi.eBH, we.eBH, and DESeq2 for location present and with location not present
+df4<-data.frame(aldex.test.results.20)
+df16<-data.frame(aldex.test.results.t20)
+df17<-data.frame(aldex.test.wilc20)
+df18<-data.frame(deseq2.test.results20)
+
+df19<-data.frame(aldex.test.results.0.5.20)
+df20<-data.frame(aldex.test.results.t200)
+df21<-data.frame(aldex.test.results.w208)
+
+
+pdf(file="combinedpanelwith4tools.pdf",width=7,height=8)
+par(mfrow= c(1,2))
+
+stripchart(list(1-df4$spec, 1-df16$spec,1-df17$spec, 1-df18$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Tool", ylab="Specificity",main="With Location",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+boxplot(1-df4$spec, 1-df16$spec, 1-df17$spec, 1-df18$spec, add=T, col=rgb(0,0,0,0),names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+
+stripchart(list(1-df19$spec, 1-df20$spec,1-df21$spec, 1-df18$spec), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Tool", ylab="Specificity",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"),main="Without Location")
+boxplot(1-df19$spec, 1-df20$spec, 1-df21$spec, 1-df18$spec, add=T, col=rgb(0,0,0,0),names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+
+dev.off()
+
+pdf(file="SENScombinedpanelwith4tools.pdf",width=8,height=8)
+par(mfrow= c(1,2))
+stripchart(list(df4$sens, df16$sens,df17$sens, df18$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",main="With Location",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+boxplot(df4$sens, df16$sens,df17$sens, df18$sens, add=T, col=rgb(0,0,0,0),names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+
+stripchart(list(df19$sens, df20$sens,df21$sens, df18$sens), vertical=T, pch=19, col=rgb(0,0,0,0.2), method='jitter',xlab="Sample Size", ylab="Sensitivity",main="Without Location",group.names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+boxplot(df19$sens, df20$sens, df21$sens, df18$sens, add=T, col=rgb(0,0,0,0),names=c("Effect-Size","t-test","Wilcoxon","DESeq2"))
+
+dev.off()
 
 ```
 

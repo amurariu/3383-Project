@@ -144,6 +144,40 @@ spec20 <- FP20/length(sub20.P)
 aldex.test.results.20[i,] <- c(size,TP20,FP20,sen20,spec20)
 }
 
+#FOR N=50 UPDATED (NOV 27)
+
+#labelling of each category
+BV.ids20 <- grep("BV", virginia.groups$groups.2)
+H.ids20 <- grep("Healthy", virginia.groups$groups.2)
+refTP20 <- rownames(aldexrun)[which(abs(aldexrun$effect) > 1)]
+
+# matrix of results
+n.iter = 100
+aldex.test.results.50.test2 <- matrix(data=NA, ncol=5, nrow=n.iter)
+colnames(aldex.test.results.50.test2) <- c("size", "TP", "FP","sens","spec")
+for(i in 1:100){
+size = 50
+sub.cond20 <- c(rep("H", size), rep("BV", size))
+gam.sub20 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.cond20 )
+
+sub.ids20 <- c(sample(H.ids20,size), sample(BV.ids20,size))
+sub.data20 <- ko.virginia.filt[,sub.ids20]
+aldex.sub20 <- aldex(sub.data20,sub.cond20,gamma=gam.sub20)
+sub20.P <- rownames(aldex.sub20)[which(abs(aldex.sub20$effect) > 1)]
+aldex.plot(aldex.sub20)
+
+# TP,FP, Sensitivity, and Specificity Calculations
+TP20 <- sum(sub20.P %in% refTP20)
+FP20 <- sum(!(sub20.P %in%refTP20))
+sen20 <- TP20/length(refTP20)
+spec20 <- FP20/length(sub20.P)
+aldex.test.results.50.test2[i,] <- c(size,TP20,FP20,sen20,spec20)
+}
+
+
+
+
+
 #---------------------------------------- For n=50 ---------------------------------------------------
 
 #labelling of each category
@@ -180,7 +214,7 @@ save(aldex.test.results.3, file="output/aldex.mu0.15.3.Rda")
 save(aldex.test.results.5, file="output/aldex.mu0.15.5.Rda")
 save(aldex.test.results.10, file="output/aldex.mu0.15.10.Rda")
 save(aldex.test.results.20, file="output/aldex.mu0.15.20.Rda")
-save(aldex.test.results.50, file="output/aldex.mu0.15.50.Rda")
+save(aldex.test.results.50.test2, file="output/aldex.mu0.15.50v2.Rda")
 
 load(file='output/aldex.mu0.15.3.Rda')
 ```
@@ -483,12 +517,12 @@ aldex.plot(aldex.sub.1.50)
 # TP,FP, Sensitivity, and Specificity Calculations
 TP.1.50 <- sum(sub.P.1.50 %in% refTP.1.50)
 FP.1.50 <- sum(!(sub.P.1.50 %in%refTP.1.50))
-sen.1.50 <- TP.0.5.50/length(refTP.1.50)
+sen.1.50 <- TP.1.50/length(refTP.1.50)
 spec.1.50 <- FP.1.50/length(sub.P.1.50)
 aldex.test.results.1.50[i,] <- c(size,TP.1.50,FP.1.50,sen.1.50,spec.1.50)
 }
 
-save(aldex.test.results.1.50, file="output/aldex.g.1.50.Rda")
+save(aldex.test.results.1.50, file="output/aldex.g.1.50v2.Rda")
 ```
 
 
@@ -1211,6 +1245,7 @@ sub.idsw10 <- c(sample(H.idsw10,size), sample(BV.idsw10,size))
 sub.dataw10 <- ko.virginia.filt[,sub.idsw10]
 gam.subw10 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.condw10)
 aldex.subw10 <- aldex(sub.dataw10,sub.condw10,gamma=gam.subw10)
+save(aldex.subw10,file="output/aldex.sub.w10")
 sub.Pw10 <- rownames(aldex.subw10)[which(abs(aldex.subw10$wi.eBH) < 0.01)]
 #aldex.plot(aldex.subw10)
 
@@ -1224,33 +1259,33 @@ aldex.test.results.w10[i,] <- c(size,TPw10,FPw10,senw10,specw10)
 
 save(aldex.test.results.w10, file="output/aldex.test.results.w10.Rda")
 
-
 #---------------------------------------- For n=20 ----------------------------------------------------
 #labelling each category
-BV.idsw20 <- grep("BV", virginia.groups$groups.2)
-H.idsw20 <- grep("Healthy", virginia.groups$groups.2)
-refTPw20 <- rownames(aldexrun7)[which(abs(aldexrun7$wi.eBH) < 0.01)]
+#BV.idsw20 <- grep("BV", virginia.groups$groups.2)
+#H.idsw20 <- grep("Healthy", virginia.groups$groups.2)
+#refTPw20 <- rownames(aldexrun7)[which(abs(aldexrun7$wi.eBH) < 0.01)]
 
 # matrix of results
-n.iter = 100
-aldex.test.results.w20 <- matrix(data=NA, ncol=5, nrow=n.iter)
-colnames(aldex.test.results.w20) <- c("size", "TP", "FP","sens","spec")
-for(i in 1:100){
-size = 10
-sub.condw20 <- c(rep("H", size), rep("BV", size))
-sub.idsw20 <- c(sample(H.idsw20,size), sample(BV.idsw20,size))
-gam.subw20 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.condw20)
-sub.dataw20 <- ko.virginia.filt[,sub.idsw20]
-aldex.subw20 <- aldex(sub.dataw20,sub.condt20,gamma=0.5)
-sub.Pw20 <- rownames(aldex.subw20)[which(abs(aldex.subw20$wi.eBH) < 0.01)]
+#n.iter = 100
+#aldex.test.results.w20 <- matrix(data=NA, ncol=5, nrow=n.iter)
+#colnames(aldex.test.results.w20) <- c("size", "TP", "FP","sens","spec")
+#for(i in 1:100){
+#size = 10
+#sub.condw20 <- c(rep("H", size), rep("BV", size))
+#sub.idsw20 <- c(sample(H.idsw20,size), sample(BV.idsw20,size))
+#gam.subw20 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.condw20)
+#sub.dataw20 <- ko.virginia.filt[,sub.idsw20]
+#aldex.subw20 <- aldex(sub.dataw20,sub.condt20,gamma=0.5)
+#sub.Pw20 <- rownames(aldex.subw20)[which(abs(aldex.subw20$wi.eBH) < 0.01)]
 #aldex.plot(aldex.subw20)
 
 # TP,FP, Sensitivity, and Specificity Calculations
-TPw20 <- sum(sub.Pw20 %in% refTPw20)
-FPw20 <- sum(!(sub.Pw20 %in%refTPw20))
-senw20 <- TPw20/length(refTPw20)
-specw20 <- FPw20/length(sub.Pw20)
-aldex.test.results.w20[i,] <- c(size,TPt20,FPt20,sent20,spect20)
+
+#TPw20 <- sum(sub.Pw20 %in% refTPw20)
+#FPw20 <- sum(!(sub.Pw20 %in%refTPw20))
+#senw20 <- TPw20/length(refTPw20)
+#specw20 <- FPw20/length(sub.Pw20)
+#aldex.test.results.w20[i,] <- c(size,TPt20,FPt20,sent20,spect20)
 }
 
 save(aldex.test.results.w20, file="output/aldex.test.results.w20.Rda")
@@ -1267,7 +1302,7 @@ n.iter = 100
 aldex.test.results.w50 <- matrix(data=NA, ncol=5, nrow=n.iter)
 colnames(aldex.test.results.w50) <- c("size", "TP", "FP","sens","spec")
 for(i in 1:100){
-size = 10
+size = 50
 sub.condw50 <- c(rep("H", size), rep("BV", size))
 sub.idsw50 <- c(sample(H.idsw50,size), sample(BV.idsw50,size))
 gam.subw50 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.condw50)
@@ -1284,7 +1319,40 @@ specw50 <- FPw50/length(sub.Pw50)
 aldex.test.results.w50[i,] <- c(size,TPw50,FPw50,senw50,specw50)
 }
 
-save(aldex.test.results.w50, file="output/aldex.test.results.w50.Rda")
+save(aldex.test.results.w50, file="output/aldex.test.results.w50V2.Rda")
+aldexres<-aldex.test.results.w50
+
+
+
+##trial 2 for n=20
+BV.idsw50 <- grep("BV", virginia.groups$groups.2)
+H.idsw50 <- grep("Healthy", virginia.groups$groups.2)
+refTPw50 <- rownames(aldexrun7)[which(abs(aldexrun7$wi.eBH) < 0.01)]
+
+# matrix of results
+n.iter = 100
+aldex.test.results.w50 <- matrix(data=NA, ncol=5, nrow=n.iter)
+colnames(aldex.test.results.w50) <- c("size", "TP", "FP","sens","spec")
+for(i in 1:100){
+size = 20
+sub.condw50 <- c(rep("H", size), rep("BV", size))
+sub.idsw50 <- c(sample(H.idsw50,size), sample(BV.idsw50,size))
+gam.subw50 <-  aldex.makeScaleMatrix(gamma=0.5, mu=c(0.15,0), conditions = sub.condw50)
+sub.dataw50 <- ko.virginia.filt[,sub.idsw50]
+aldex.subw50 <- aldex(sub.dataw50,sub.condw50,gamma=0.5)
+sub.Pw50 <- rownames(aldex.subw50)[which(abs(aldex.subw50$wi.eBH) < 0.01)]
+#aldex.plot(aldex.subw50)
+
+# TP,FP, Sensitivity, and Specificity Calculations
+TPw50 <- sum(sub.Pw50 %in% refTPw50)
+FPw50 <- sum(!(sub.Pw50 %in%refTPw50))
+senw50 <- TPw50/length(refTPw50)
+specw50 <- FPw50/length(sub.Pw50)
+aldex.test.results.w50[i,] <- c(size,TPw50,FPw50,senw50,specw50)
+}
+
+save(aldex.test.results.w50, file="output/aldex.test.results.w20V2.Rda")
+aldexres2<-aldex.test.results.w50
 
 ```
 
